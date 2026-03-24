@@ -134,11 +134,11 @@
         if (email === "admin" && pass === "admin") {
             localStorage.setItem("loggedIn", true)
             localStorage.setItem("userRole", "admin")
-            window.location.href = "admin.html"
+            window.location.href =  "/admin"
         } else if ((email === "hej" && pass === "123") || (email === savedEmail && pass === savedPass)) {
             localStorage.setItem("loggedIn", true)
             localStorage.setItem("userRole", "member")
-            window.location.href = "home.html"
+            window.location.href = "/Home"
         } else {
             errMsg.style.display = "block"
         }
