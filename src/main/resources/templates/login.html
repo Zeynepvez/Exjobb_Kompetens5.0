@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="auth-container" id="loginBox">
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="text" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPass" placeholder="Password" required>
+        <div class="error-msg" id="loginError">Invalid email or password</div>
+        <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account?</p>
+    <p><a href="#" onclick="showStep1(); return false;">Register</a></p>
+</div>
+
+<!-- REGISTER STEP 1 -->
+<div class="auth-container hidden" id="registerStep1">
+    <div class="steps">
+        <div class="step active">1</div>
+        <div class="step-line"></div>
+        <div class="step">2</div>
+    </div>
+    <h2>Register</h2>
+    <p class="required-note">Fields marked with <span>*</span> are required.</p>
+    <form id="step1Form">
+        <label>First name <span>*</span></label>
+        <input type="text" id="firstName" placeholder="First name" required>
+        <label>Last name <span>*</span></label>
+        <input type="text" id="lastName" placeholder="Last name" required>
+        <label>Email <span>*</span></label>
+        <input type="email" id="regEmail" placeholder="Email" required>
+        <label>Phone</label>
+        <input type="tel" id="phone" placeholder="Phone">
+        <label>Organisation/Company</label>
+        <input type="text" id="organisation" placeholder="Organisation/Company">
+        <label>Role/Title</label>
+        <input type="text" id="role" placeholder="Role/Title">
+        <label>Municipality</label>
+        <input type="text" id="municipality" placeholder="Municipality">
+        <div class="checkbox-row">
+            <input type="checkbox" id="gdpr" required>
+            <label for="gdpr">I consent to my personal data being processed <span>*</span></label>
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" id="terms" required>
+            <label for="terms">I agree to the terms and conditions <span>*</span></label>
+        </div>
+        <button type="submit">Next</button>
+    </form>
+    <p><button class="link-btn" onclick="showLogin()">Back to login</button></p>
+</div>
+
+<!-- REGISTER STEP 2 -->
+<div class="auth-container hidden" id="registerStep2">
+    <div class="steps">
+        <div class="step">1</div>
+        <div class="step-line"></div>
+        <div class="step active">2</div>
+    </div>
+    <h2>Choose password</h2>
+    <form id="step2Form">
+        <label>Password <span style="color:red">*</span></label>
+        <input type="password" id="regPass" placeholder="Password" required>
+        <label>Confirm password <span style="color:red">*</span></label>
+        <input type="password" id="regPassConfirm" placeholder="Confirm password" required>
+        <div class="error-msg" id="passError">Passwords do not match</div>
+        <div class="success-msg" id="regSuccess">Account created! Please login.</div>
+        <button type="submit">Create account</button>
+    </form>
+    <p><button class="link-btn" onclick="showStep1()">Back</button></p>
+</div>
+
+<script>
+    function showLogin() {
+        document.getElementById("loginBox").classList.remove("hidden")
+        document.getElementById("registerStep1").classList.add("hidden")
+        document.getElementById("registerStep2").classList.add("hidden")
+    }
+
+    function showStep1() {
+        document.getElementById("loginBox").classList.add("hidden")
+        document.getElementById("registerStep1").classList.remove("hidden")
+        document.getElementById("registerStep2").classList.add("hidden")
+    }
+
+    function showStep2() {
+        document.getElementById("registerStep1").classList.add("hidden")
+        document.getElementById("registerStep2").classList.remove("hidden")
+    }
+
+    document.getElementById("step1Form").addEventListener("submit", function(e) {
+        e.preventDefault()
+        showStep2()
+    })
+
+    document.getElementById("step2Form").addEventListener("submit", function(e) {
+        e.preventDefault()
+        let pass = document.getElementById("regPass").value
+        let passConfirm = document.getElementById("regPassConfirm").value
+        let errMsg = document.getElementById("passError")
+        let successMsg = document.getElementById("regSuccess")
+        if (pass !== passConfirm) {
+            errMsg.style.display = "block"
+            successMsg.style.display = "none"
+            return
+        }
+        errMsg.style.display = "none"
+        localStorage.setItem("firstName",    document.getElementById("firstName").value)
+        localStorage.setItem("lastName",     document.getElementById("lastName").value)
+        localStorage.setItem("email",        document.getElementById("regEmail").value)
+        localStorage.setItem("phone",        document.getElementById("phone").value)
+        localStorage.setItem("organisation", document.getElementById("organisation").value)
+        localStorage.setItem("role",         document.getElementById("role").value)
+        localStorage.setItem("municipality", document.getElementById("municipality").value)
+        localStorage.setItem("password",     pass)
+        successMsg.style.display = "block"
+        setTimeout(() => { showLogin(); successMsg.style.display = "none" }, 2000)
+    })
+
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+        e.preventDefault()
+        let email = document.getElementById("loginEmail").value
+        let pass = document.getElementById("loginPass").value
+        let savedEmail = localStorage.getItem("email")
+        let savedPass = localStorage.getItem("password")
+        let errMsg = document.getElementById("loginError")
+        if (email === "admin" && pass === "admin") {
+            localStorage.setItem("loggedIn", true)
+            localStorage.setItem("userRole", "admin")
+            window.location.href = "admin.html"
+        } else if ((email === "hej" && pass === "123") || (email === savedEmail && pass === savedPass)) {
+            localStorage.setItem("loggedIn", true)
+            localStorage.setItem("userRole", "member")
+            window.location.href = "home.html"
+        } else {
+            errMsg.style.display = "block"
+        }
+    })
+</script>
+
+</body>
+</html>
