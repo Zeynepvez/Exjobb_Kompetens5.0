@@ -131,7 +131,7 @@
         let savedEmail = localStorage.getItem("email")
         let savedPass = localStorage.getItem("password")
         let errMsg = document.getElementById("loginError")
-        if (email === "admin" && pass === "admin") {
+        if (email === "admin" && pass === "12345") {
             localStorage.setItem("loggedIn", true)
             localStorage.setItem("userRole", "admin")
             window.location.href =  "/admin"
