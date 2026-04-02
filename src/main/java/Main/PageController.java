@@ -25,4 +25,8 @@ public class PageController {
     public String showAdmin() {
         return "admin";
     }
+    @GetMapping("/profile")
+    public String showProfile() {
+        return "profile";
+    }
 }
