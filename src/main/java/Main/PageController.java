@@ -16,7 +16,7 @@ public class PageController {
         return "login";
     }
 
-    @GetMapping("/Home")
+    @GetMapping("/Home.html")
     public String showHome() {
         return "Home";
     }
@@ -24,5 +24,10 @@ public class PageController {
     @GetMapping("/admin")
     public String showAdmin() {
         return "admin";
+    }
+
+    @GetMapping("/contact.html")
+    public String contact() {
+        return "contact";
     }
 }

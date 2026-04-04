@@ -1,0 +1,63 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<script>
+    let loggedIn = localStorage.getItem("loggedIn")
+    if(!loggedIn){
+        window.location.href = "login.html"
+    }
+</script>
+
+<body>
+<header class="header">
+    <div class="logo">Kompetens 5.0</div>
+</header>
+
+<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="profile">
+            <img src="/images/Profil.exjobb.jpg">
+            <h3>Member member</h3>
+            <a href="/profile"><button class="purple-btn">View Profile</button></a>
+        </div>
+
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="#">My courses</a>
+            <a href="#">Browse courses</a>
+            <a href="#" class="logout-btn">Log out</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <h2>Contact us</h2>
+    <div class="card">
+        <h3>✉️ Send message</h3>
+        <form>
+            <div class="form-group">
+                <input type="text" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="Your email" required>
+            </div>
+            <div class="form-group">
+                <textarea placeholder="Your message..." rows="5" required></textarea>
+            </div>
+            <button type="submit" class="visit-btn">Send</button>
+        </form>
+    </div>
+
+
+        <div class="card">
+            <h3>Learn more about Competence 5.0</h3>
+            <button class="visit-btn" onclick="window.open('https://comptelligence.org/about/', '_blank')">Visit website</button>
+        </div>
+    </main>
+
+</div>
+</body>
+</html>

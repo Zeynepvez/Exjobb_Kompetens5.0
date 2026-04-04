@@ -66,7 +66,6 @@ body {
 
 .purple-btn{
     background: #8e44ad;
-
     color: white;
     border: none;
     padding: 8px 14px;
@@ -164,4 +163,65 @@ footer{
     padding:20px;
     margin-top:30px;
     color:gray;
+}
+
+/* CONTACT */
+.contact-info {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.contact-info .card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-info a {
+    color: #8e44ad;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+.content h2 {
+    margin-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.card {
+    margin-bottom: 30px;
+}
+.visit-btn{
+    background: dodgerblue;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+}
+
+.visit-btn:hover {
+    background-color: blue;
+    transform: scale(1.05);
+    cursor: pointer;
 }
