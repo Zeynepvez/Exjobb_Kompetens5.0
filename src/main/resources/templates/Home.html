@@ -19,7 +19,7 @@
 <header class="header">
 
     <div class="logo">Kompetens 5.0</div>
-    <input type="text" class="search" placeholder="search courses...">
+    <input type="text" class="search" id="searchInput" placeholder="search courses...">
 
 </header>
 
@@ -30,14 +30,15 @@
             <img src="/images/Profil.exjobb.jpg">
             <h3>Member member</h3>
 
-            <a href="profile.html"><button class="purple-btn">View Profile</button></a>
+            <a href="/profile"><button class="purple-btn">View Profile</button></a>
         </div>
+
 
         <nav>
             <a href="#">Home</a>
             <a href="my-courses">My courses</a>
             <a href="#">Browse courses</a>
-            <a href="#">Contact</a>
+            <a href="#">Settings</a>
             <a href="#" class="logout-btn">Log out</a>
         </nav>
     </aside>
@@ -77,4 +78,13 @@
 
     </main>
 </div>
+<script>                                          <!-- ← här -->
+document.getElementById("searchInput").addEventListener("input", function() {
+    let q = this.value.toLowerCase()
+    document.querySelectorAll(".courses").forEach(card => {
+        let title = card.querySelector("h4").textContent.toLowerCase()
+        card.style.display = title.includes(q) ? "block" : "none"
+    })
+})
+</script>
 </body>
