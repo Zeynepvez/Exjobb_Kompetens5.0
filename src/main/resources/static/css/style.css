@@ -65,14 +65,14 @@ body {
 }
 
 .purple-btn{
-    background: #8e44ad;
+    background: darkcyan;/*#8e44ad;*/
     color: white;
     border: none;
     padding: 8px 14px;
 }
 
 .purple-btn:hover {
-    background: #6c3483;
+    background: steelblue;
 }
 nav{
     display:flex;
@@ -250,8 +250,4 @@ footer{
 
 .profile-form h2 {
     margin-bottom: 25px;
-}
-.purple-btn:hover {
-    background: #7d3c98;
-    cursor: pointer;
 }
