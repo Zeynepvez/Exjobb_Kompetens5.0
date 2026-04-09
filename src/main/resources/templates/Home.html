@@ -19,7 +19,7 @@
 <header class="header">
 
     <div class="logo">Kompetens 5.0</div>
-    <input type="text" class="search" placeholder="search courses...">
+    <input type="text" class="search" id="searchInput" placeholder="search courses...">
 
 </header>
 
@@ -78,4 +78,13 @@
 
     </main>
 </div>
+<script>                                          <!-- ← här -->
+document.getElementById("searchInput").addEventListener("input", function() {
+    let q = this.value.toLowerCase()
+    document.querySelectorAll(".courses").forEach(card => {
+        let title = card.querySelector("h4").textContent.toLowerCase()
+        card.style.display = title.includes(q) ? "block" : "none"
+    })
+})
+</script>
 </body>
