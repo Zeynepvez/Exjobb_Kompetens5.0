@@ -2,25 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
+    <title>My Courses</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <script>
-
     let loggedIn = localStorage.getItem("loggedIn")
-
     if(!loggedIn){
         window.location.href = "login.html"
     }
-
 </script>
 
 <body>
 <header class="header">
-
     <div class="logo">Kompetens 5.0</div>
-    <input type="text" class="search" id="searchInput" placeholder="search courses...">
-
+    <input type="text" class="search" placeholder="search courses...">
 </header>
 
 <div class="layout">
@@ -29,53 +24,44 @@
         <div class="profile">
             <img src="/images/Profil.exjobb.jpg">
             <h3>Member member</h3>
-
-            <a href="/profile"><button class="purple-btn">View Profile</button></a>
+            <a href="profile.html"><button class="purple-btn">View Profile</button></a>
         </div>
 
-
         <nav>
-            <a href="#">Home</a>
-            <a href="#">My courses</a>
+            <a href="Home">Home</a>
             <a href="browse-courses">Browse courses</a>
-            <a href="#">Contact</a>
+            <a href="contact">Contact</a>
             <a href="#" class="logout-btn">Log out</a>
         </nav>
     </aside>
 
-    <!-- MAIN  -->
+    <!-- MAIN CONTENT -->
     <main class="content">
-        <div class="cards">
-            <div class="card">
-                <h3>Registrations</h3>
+        <h2>My Courses</h2>
 
-                <button class="purple-btn">View Registrations</button>
+        <div class="my-courses-grid">
 
-            </div>
-
-            <div class="card">
-                <h3>Learn more about Competence 5.0</h3>
-
-                <button class="purple-btn">Click here</button>
-            </div>
+        <div class="my-course-card">
+            <h3>Course 1: Java Programming</h3>
+            <p>Status: <strong>Ongoing</strong></p>
+            <p>Progress: 75%</p>
+            <button class="purple-btn">Continue</button>
         </div>
 
-        <h2 class="course-title">Upcoming courses</h2>
-        <div class="course">
-        <div class="courses">
-            <h4>Course 1</h4>
-            <button class="register-btn">Register</button>
-        </div>
-        <div class="courses">
-            <h4>Course 2</h4>
-            <button class="register-btn">Register</button>
-        </div>
-        <div class="courses">
-            <h4>Course 3</h4>
-            <button class="register-btn">Register</button>
-        </div>
+        <div class="my-course-card">
+            <h3>Course 2: Web Development</h3>
+            <p>Status: <strong>Completed</strong></p>
+            <p>Progress: 100%</p>
+            <button class="purple-btn">View Certificate</button>
         </div>
 
+        <div class="my-course-card">
+            <h3>Course 3: Database Design</h3>
+            <p>Status: <strong>Not started</strong></p>
+            <p>Progress: 0%</p>
+            <button class="purple-btn">Start</button>
+        </div>
+        </div>
     </main>
 </div>
 <script>                                          <!-- ← här -->
@@ -88,3 +74,4 @@ document.getElementById("searchInput").addEventListener("input", function() {
 })
 </script>
 </body>
+</html>

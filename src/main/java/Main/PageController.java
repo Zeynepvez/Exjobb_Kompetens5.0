@@ -28,5 +28,13 @@ public class PageController {
     @GetMapping("/browse-courses")
     public String showBrowseCourses() {
         return "browse-courses";
+
+    @GetMapping("/my-courses")
+    public String showMyCourses() {
+        return "my-courses";
+    }
+    @GetMapping("/profile")
+    public String showProfile() {
+        return "profile";
     }
 }
