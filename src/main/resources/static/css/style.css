@@ -66,12 +66,14 @@ body {
 
 .purple-btn{
     background: #8e44ad;
-
     color: white;
     border: none;
     padding: 8px 14px;
 }
 
+.purple-btn:hover {
+    background: #6c3483;
+}
 nav{
     display:flex;
     flex-direction: column;
@@ -156,6 +158,46 @@ nav a:hover{
 .register-btn:hover {
     background: #e9e9e9;
     border-color: #ccc;
+}
+/* MY courses */
+
+.my-course-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.my-course-card h4 {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.my-course-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.my-course-card .register-btn {
+    margin-top: 15px;
+}
+
+.my-courses-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
 }
 /* FOOTER */
 
