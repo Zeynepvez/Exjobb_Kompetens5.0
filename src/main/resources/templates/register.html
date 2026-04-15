@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo">Kompetens 5.0</div>
+</header>
+
+<div class="register-container">
+    <h2>Skapa konto</h2>
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <div class="form-row">
+            <div class="form-group">
+                <label>Förnamn</label>
+                <input type="text" th:field="*{firstName}" required>
+            </div>
+            <div class="form-group">
+                <label>Efternamn</label>
+                <input type="text" th:field="*{lastName}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" th:field="*{email}" required>
+        </div>
+        <div class="form-group">
+            <label>Lösenord</label>
+            <input type="password" th:field="*{password}" required>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Telefon</label>
+                <input type="text" th:field="*{phone}">
+            </div>
+            <div class="form-group">
+                <label>Kommun</label>
+                <input type="text" th:field="*{municipality}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Organisation/Företag</label>
+                <input type="text" th:field="*{organisation}">
+            </div>
+            <div class="form-group">
+                <label>Roll/Titel</label>
+                <input type="text" th:field="*{role}">
+            </div>
+        </div>
+        <button type="submit" class="purple-btn">Registrera</button>
+        <p>Har du redan ett konto? <a href="/login">Logga in</a></p>
+    </form>
+</div>
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -10,10 +10,10 @@
 <!-- LOGIN -->
 <div class="auth-container" id="loginBox">
     <h2>Login</h2>
-    <form id="loginForm">
-        <input type="text" id="loginEmail" placeholder="Email" required>
-        <input type="password" id="loginPass" placeholder="Password" required>
-        <div class="error-msg" id="loginError">Invalid email or password</div>
+    <form th:action="@{/login}" method="post">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <div class="error-msg" th:if="${loginError}" th:text="${loginError}"></div>
         <button type="submit">Login</button>
     </form>
     <p>Don't have an account?</p>
@@ -65,13 +65,19 @@
         <div class="step active">2</div>
     </div>
     <h2>Choose password</h2>
-    <form id="step2Form">
+    <form id="step2Form" th:action="@{/register}" method="post">
+        <input type="hidden" id="hiddenFirstName" name="firstName">
+        <input type="hidden" id="hiddenLastName" name="lastName">
+        <input type="hidden" id="hiddenEmail" name="email">
+        <input type="hidden" id="hiddenPhone" name="phone">
+        <input type="hidden" id="hiddenOrganisation" name="organisation">
+        <input type="hidden" id="hiddenRole" name="role">
+        <input type="hidden" id="hiddenMunicipality" name="municipality">
         <label>Password <span style="color:red">*</span></label>
-        <input type="password" id="regPass" placeholder="Password" required>
+        <input type="password" id="regPass" name="password" placeholder="Password" required>
         <label>Confirm password <span style="color:red">*</span></label>
         <input type="password" id="regPassConfirm" placeholder="Confirm password" required>
         <div class="error-msg" id="passError">Passwords do not match</div>
-        <div class="success-msg" id="regSuccess">Account created! Please login.</div>
         <button type="submit">Create account</button>
     </form>
     <p><button class="link-btn" onclick="showStep1()">Back</button></p>
@@ -97,49 +103,23 @@
 
     document.getElementById("step1Form").addEventListener("submit", function(e) {
         e.preventDefault()
+        // Flytta data till hidden fields i step2
+        document.getElementById("hiddenFirstName").value = document.getElementById("firstName").value
+        document.getElementById("hiddenLastName").value = document.getElementById("lastName").value
+        document.getElementById("hiddenEmail").value = document.getElementById("regEmail").value
+        document.getElementById("hiddenPhone").value = document.getElementById("phone").value
+        document.getElementById("hiddenOrganisation").value = document.getElementById("organisation").value
+        document.getElementById("hiddenRole").value = document.getElementById("role").value
+        document.getElementById("hiddenMunicipality").value = document.getElementById("municipality").value
         showStep2()
     })
 
     document.getElementById("step2Form").addEventListener("submit", function(e) {
-        e.preventDefault()
         let pass = document.getElementById("regPass").value
         let passConfirm = document.getElementById("regPassConfirm").value
         let errMsg = document.getElementById("passError")
-        let successMsg = document.getElementById("regSuccess")
         if (pass !== passConfirm) {
-            errMsg.style.display = "block"
-            successMsg.style.display = "none"
-            return
-        }
-        errMsg.style.display = "none"
-        localStorage.setItem("firstName",    document.getElementById("firstName").value)
-        localStorage.setItem("lastName",     document.getElementById("lastName").value)
-        localStorage.setItem("email",        document.getElementById("regEmail").value)
-        localStorage.setItem("phone",        document.getElementById("phone").value)
-        localStorage.setItem("organisation", document.getElementById("organisation").value)
-        localStorage.setItem("role",         document.getElementById("role").value)
-        localStorage.setItem("municipality", document.getElementById("municipality").value)
-        localStorage.setItem("password",     pass)
-        successMsg.style.display = "block"
-        setTimeout(() => { showLogin(); successMsg.style.display = "none" }, 2000)
-    })
-
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
-        e.preventDefault()
-        let email = document.getElementById("loginEmail").value
-        let pass = document.getElementById("loginPass").value
-        let savedEmail = localStorage.getItem("email")
-        let savedPass = localStorage.getItem("password")
-        let errMsg = document.getElementById("loginError")
-        if (email === "admin" && pass === "12345") {
-            localStorage.setItem("loggedIn", true)
-            localStorage.setItem("userRole", "admin")
-            window.location.href =  "/admin"
-        } else if ((email === "hej" && pass === "123") || (email === savedEmail && pass === savedPass)) {
-            localStorage.setItem("loggedIn", true)
-            localStorage.setItem("userRole", "member")
-            window.location.href = "/Home"
-        } else {
+            e.preventDefault()
             errMsg.style.display = "block"
         }
     })

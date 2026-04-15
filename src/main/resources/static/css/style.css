@@ -255,3 +255,16 @@ footer{
     background: #7d3c98;
     cursor: pointer;
 }
+
+.register-container {
+    max-width: 700px;
+    margin: 50px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.05);
+}
+
+.register-container h2 {
+    margin-bottom: 25px;
+}
