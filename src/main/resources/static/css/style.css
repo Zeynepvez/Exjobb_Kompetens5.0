@@ -65,14 +65,14 @@ body {
 }
 
 .purple-btn{
-    background: #8e44ad;
+    background: darkcyan;
     color: white;
     border: none;
     padding: 8px 14px;
 }
 
 .purple-btn:hover {
-    background: #6c3483;
+    background: steelblue;
 }
 nav{
     display:flex;

@@ -39,6 +39,12 @@ public class PageController {
         return "admin";
     }
 
+    @GetMapping("/contact")
+    public String showContact() {
+        return "contact";
+    }
+
+
     @GetMapping("/my-courses")
     public String showMyCourses() {
         return "my-courses";

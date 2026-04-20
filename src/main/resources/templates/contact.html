@@ -1,15 +1,9 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Contact</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<script>
-    let loggedIn = localStorage.getItem("loggedIn")
-    if(!loggedIn){
-        window.location.href = "login.html"
-    }
-</script>
 
 <body>
 <header class="header">
@@ -26,9 +20,10 @@
         </div>
 
         <nav>
-            <a href="Home.html">Home</a>
-            <a href="#">My courses</a>
-            <a href="#">Browse courses</a>
+            <a href="/Home">Home</a>
+            <a href="/my-courses">My courses</a>
+            <a href="/browse-courses">Browse courses</a>
+            <a href="/contact" class="active">Contact</a>
             <a href="#" class="logout-btn">Log out</a>
         </nav>
     </aside>
