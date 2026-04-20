@@ -16,7 +16,7 @@ public class PageController {
         return "login";
     }
 
-    @GetMapping("/Home")
+    @GetMapping("/Home.html")
     public String showHome() {
         return "Home";
     }
@@ -26,6 +26,9 @@ public class PageController {
         return "admin";
     }
 
+    @GetMapping("/contact.html")
+    public String contact() {
+        return "contact";
     @GetMapping("/my-courses")
     public String showMyCourses() {
         return "my-courses";
