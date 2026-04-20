@@ -29,5 +29,13 @@ public class PageController {
     @GetMapping("/contact.html")
     public String contact() {
         return "contact";
+    @GetMapping("/my-courses")
+    public String showMyCourses() {
+        return "my-courses";
+
+    }
+    @GetMapping("/profile")
+    public String showProfile() {
+        return "profile";
     }
 }
