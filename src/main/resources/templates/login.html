@@ -65,7 +65,7 @@
         <div class="step active">2</div>
     </div>
     <h2>Choose password</h2>
-    <form id="step2Form" th:action="@{/register}" method="post">
+    <form id="step2Form" action="/register" method="post">
         <input type="hidden" id="hiddenFirstName" name="firstName">
         <input type="hidden" id="hiddenLastName" name="lastName">
         <input type="hidden" id="hiddenEmail" name="email">
