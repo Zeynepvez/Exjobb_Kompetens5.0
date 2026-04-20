@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 
 @Controller
 public class PageController {
@@ -69,8 +71,27 @@ public class PageController {
     }
 
     @GetMapping("/admin")
-    public String showAdmin() {
+    public String showAdmin(HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) {
+            return "redirect:/login";
+        }
+        List<User> allUsers = userService.findAllUsers();
+        model.addAttribute("members", allUsers);
+        model.addAttribute("totalMembers", allUsers.size());
+
         return "admin";
+
+    }
+
+    @PostMapping("/admin/delete-member")
+    public String deleteMember(@RequestParam("id") Long id, HttpSession session) {
+        if (session.getAttribute("admin") == null) {
+            return "redirect:/login";
+        }
+        userService.deleteUserById(id);
+
+        return "redirect:/admin";
+
     }
 
     @GetMapping("/contact")
@@ -105,6 +126,14 @@ public class PageController {
             HttpSession session,
             Model model) {
 
+        String adminEmail = "admin@kompetens.com";
+        String adminPassword = "admin123";
+
+        if (adminEmail.equals(email) && adminPassword.equals(password)) {
+            session.setAttribute("admin", true);
+            session.setAttribute("adminEmail", email);
+            return "redirect:/admin";
+        }
         User user = userService.findByEmail(email);
 
         if (user != null && user.getPassword().equals(password)) {
@@ -117,7 +146,8 @@ public class PageController {
     }
 
     @GetMapping("/browse-courses")
-    public String showBrowseCourses(HttpSession session, Model model) {
+    public String showBrowseCourses
+        (HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
         model.addAttribute("user", user);

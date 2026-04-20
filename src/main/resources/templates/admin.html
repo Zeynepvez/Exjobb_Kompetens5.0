@@ -10,7 +10,7 @@
 
 <header class="header">
     <div class="logo">Kompetens 5.0 — Admin</div>
-    <input type="text" class="search" placeholder="Search...">
+
 </header>
 
 <div class="layout">
@@ -18,29 +18,30 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="profile">
-            <img src="/images/Profil.exjobb.jpg">
+            <img src="/Images/Profil.exjobb.jpg">
             <h3>Administrator</h3>
-            <button class="purple-btn">Admin Panel</button>
+            <button class="purple-btn">View Profile</button>
         </div>
 
         <nav>
-            <a href="#">Dashboard</a>
-            <a href="#">Members</a>
+
             <a href="#">Courses</a>
             <a href="#">News</a>
-            <a href="#">Log out</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
         </nav>
     </aside>
 
     <!-- MAIN -->
     <main class="content">
 
-        <h2>Dashboard</h2>
+        <h2>Overview</h2>
 
         <div class="cards">
             <div class="card">
                 <h3>Total Members</h3>
-                <p>0 registered members</p>
+                <p th:text="${totalMembers} + ' registered members'">0 registered members</p>
                 <button class="purple-btn">Manage Members</button>
             </div>
 
@@ -56,15 +57,44 @@
             </div>
         </div>
 
-        <h2 class="course-title">Members</h2>
+        <h2 class="course-title">All members</h2>
 
-        <div class="courses">
-            <h4>Member 1</h4>
-        </div>
-        <div class="courses">
-            <h4>Member 2</h4>
+        <div class="table-container">
+            <table class="members-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Organisation</th>
+                    <th>Role</th>
+                    <th>Municipality</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="member : ${members}">
+                    <td th:text="${member.firstName} + ' ' + ${member.lastName}">John Doe</td>
+                    <td th:text="${member.email}">john@example.com</td>
+                    <td th:text="${member.organisation != null ? member.organisation : '-'}">Company</td>
+                    <td th:text="${member.role != null ? member.role : '-'}">Role</td>
+                    <td th:text="${member.municipality != null ? member.municipality : '-'}">City</td>
+                    <td th:text="${member.phone != null ? member.phone : '-'}">Phone</td>
+                    <td class="actions">
+                        <form th:action="@{/admin/delete-member}" method="post" class="delete-form"
+                              onsubmit="return confirmDelete('${member.firstName} ${member.lastName}')">
+                            <input type="hidden" name="id" th:value="${member.id}" />
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
+                <div th:if="${#lists.isEmpty(members)}" class="empty-message">
+                    <p>No members registered yet.</p>
+                </div>
     </main>
 </div>
 
