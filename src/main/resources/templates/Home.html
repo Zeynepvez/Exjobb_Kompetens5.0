@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
 
@@ -19,8 +19,8 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="profile">
-            <img src="/images/Profil.exjobb.jpg">
-            <h3>Member member</h3>
+            <img src="/Images/Profil.exjobb.jpg">
+            <h3 th:text="${user.firstName + ' ' + user.lastName}">Member</h3>
 
             <a href="/profile"><button class="purple-btn">View Profile</button></a>
         </div>
@@ -31,7 +31,9 @@
             <a href="/my-courses">My courses</a>
             <a href="/browse-courses">Browse courses</a>
             <a href="/contact">Contact</a>
-            <a href="#" class="logout-btn">Log out</a>
+            <form th:action="@{/logout}" method="post" >
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
         </nav>
     </aside>
 
@@ -39,16 +41,17 @@
     <main class="content">
         <div class="cards">
             <div class="card">
-                <h3>Registrations</h3>
 
+                <h3>My Registrations</h3>
+                <p>View and manage your course registrations</p>
                 <button class="purple-btn">View Registrations</button>
 
             </div>
 
             <div class="card">
-                <h3>Learn more about Competence 5.0</h3>
-
-                <button class="purple-btn">Click here</button>
+                <h3>About Competence 5.0</h3>
+                <p>Learn more about our platform and mission</p>
+                <button class="purple-btn" onclick="window.open('https://comptelligence.org/about/', '_blank')">Visit website </button>
             </div>
         </div>
 
@@ -70,7 +73,7 @@
 
     </main>
 </div>
-<script>                                          <!-- ← här -->
+<script>
 document.getElementById("searchInput").addEventListener("input", function() {
     let q = this.value.toLowerCase()
     document.querySelectorAll(".courses").forEach(card => {
