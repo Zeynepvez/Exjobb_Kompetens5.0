@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>My Courses</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<script>
-
-</script>
-
 <body>
 <header class="header">
     <div class="logo">Kompetens 5.0</div>
@@ -16,14 +12,12 @@
 </header>
 
 <div class="layout">
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="profile">
             <img src="/Images/Profil.exjobb.jpg">
             <h3 th:text="${user.firstName + ' ' + user.lastName}">Member</h3>
             <a href="/profile"><button class="purple-btn">View Profile</button></a>
         </div>
-
         <nav>
             <a href="/Home">Home</a>
             <a href="/my-courses" class="active">My courses</a>
@@ -35,35 +29,24 @@
         </nav>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="content">
         <h2>My Courses</h2>
-
         <div class="my-courses-grid">
-
-        <div class="my-course-card">
-            <h3>Course 1: Java Programming</h3>
-            <p>Status: <strong>Ongoing</strong></p>
-            <p>Progress: 75%</p>
-            <button class="purple-btn">Continue</button>
-        </div>
-
-        <div class="my-course-card">
-            <h3>Course 2: Web Development</h3>
-            <p>Status: <strong>Completed</strong></p>
-            <p>Progress: 100%</p>
-            <button class="purple-btn">View Certificate</button>
-        </div>
-
-        <div class="my-course-card">
-            <h3>Course 3: Database Design</h3>
-            <p>Status: <strong>Not started</strong></p>
-            <p>Progress: 0%</p>
-            <button class="purple-btn">Start</button>
-        </div>
+            <div class="my-course-card" th:each="reg : ${registrations}">
+                <h3 th:text="${reg.course.title}">Course Title</h3>
+                <p th:text="${reg.course.description != null ? reg.course.description : ''}"></p>
+                <p th:if="${reg.course.date != null}">Date: <strong th:text="${reg.course.date}"></strong></p>
+                <p th:if="${reg.course.location != null}">Location: <strong th:text="${reg.course.location}"></strong></p>
+                <form th:action="@{/courses/unregister}" method="post">
+                    <input type="hidden" name="courseId" th:value="${reg.course.id}">
+                    <button type="submit" class="delete-btn">Unregister</button>
+                </form>
+            </div>
+            <p th:if="${#lists.isEmpty(registrations)}">You have not registered for any courses yet.</p>
         </div>
     </main>
 </div>
+
 <script>
     document.getElementById("searchInput").addEventListener("input", function() {
         let q = this.value.toLowerCase()

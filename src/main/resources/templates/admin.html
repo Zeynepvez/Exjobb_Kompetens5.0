@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Admin – Kompetens 5.0</title>
@@ -23,9 +23,10 @@
             <button class="purple-btn">View Profile</button>
         </div>
 
-        <nav>
 
-            <a href="#">Courses</a>
+        <nav>
+            <a href="/admin" class="active">Overview</a>
+            <a href="/admin/courses">Courses</a>
             <a href="#">News</a>
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="logout-btn">Log out</button>
@@ -47,13 +48,13 @@
 
             <div class="card">
                 <h3>Total Courses</h3>
-                <p>0 active courses</p>
-                <button class="purple-btn">Manage Courses</button>
+                <p th:text="${totalCourses} + ' active courses'">0 active courses</p>
+                <button class="purple-btn" onclick="location.href='/admin/courses'">Manage Courses</button>
             </div>
 
             <div class="card">
                 <h3>Total Registrations</h3>
-                <p>0 course registrations</p>
+                <p th:text="${totalRegistrations} + ' course registrations'">0 course registrations</p>
             </div>
         </div>
 
@@ -69,17 +70,22 @@
                     <th>Role</th>
                     <th>Municipality</th>
                     <th>Phone</th>
+                    <th>Registrations</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="member : ${members}">
-                    <td th:text="${member.firstName} + ' ' + ${member.lastName}">John Doe</td>
+                    <td>
+                        <a th:href="@{/admin/member/{id}(id=${member.id})}"
+                           th:text="${member.firstName} + ' ' + ${member.lastName}">John Doe</a>
+                    </td>
                     <td th:text="${member.email}">john@example.com</td>
                     <td th:text="${member.organisation != null ? member.organisation : '-'}">Company</td>
                     <td th:text="${member.role != null ? member.role : '-'}">Role</td>
                     <td th:text="${member.municipality != null ? member.municipality : '-'}">City</td>
                     <td th:text="${member.phone != null ? member.phone : '-'}">Phone</td>
+                    <td th:text="${memberRegistrationCounts[member.id] != null ? memberRegistrationCounts[member.id] : 0}">0</td>
                     <td class="actions">
                         <form th:action="@{/admin/delete-member}" method="post" class="delete-form"
                               onsubmit="return confirmDelete('${member.firstName} ${member.lastName}')">

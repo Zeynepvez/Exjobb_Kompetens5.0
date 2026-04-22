@@ -4,18 +4,24 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
 public class PageController {
     private UserService userService;
+    private CourseService courseService;
+    private RegistrationService registrationService;
 
-    public PageController(UserService userService) {
+    public PageController(UserService userService, CourseService courseService, RegistrationService registrationService) {
         this.userService = userService;
+        this.courseService = courseService;
+        this.registrationService = registrationService;
     }
 
 
@@ -72,15 +78,23 @@ public class PageController {
 
     @GetMapping("/admin")
     public String showAdmin(HttpSession session, Model model) {
-        if (session.getAttribute("admin") == null) {
-            return "redirect:/login";
-        }
+        if (session.getAttribute("admin") == null) return "redirect:/login";
         List<User> allUsers = userService.findAllUsers();
+        List<Course> allCourses = courseService.findAllCourses();
+        List<Registration> allRegistrations = registrationService.getAllRegistrations();
+
+        Map<Long, Long> memberRegistrationCounts = allRegistrations.stream()
+                .collect(java.util.stream.Collectors.groupingBy(
+                        r -> r.getUser().getId(),
+                        java.util.stream.Collectors.counting()
+                ));
+
         model.addAttribute("members", allUsers);
         model.addAttribute("totalMembers", allUsers.size());
-
+        model.addAttribute("totalCourses", allCourses.size());
+        model.addAttribute("totalRegistrations", allRegistrations.size());
+        model.addAttribute("memberRegistrationCounts", memberRegistrationCounts);
         return "admin";
-
     }
 
     @PostMapping("/admin/delete-member")
@@ -108,8 +122,8 @@ public class PageController {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
         model.addAttribute("user", user);
+        model.addAttribute("registrations", registrationService.getRegistrationsByUser(user));
         return "my-courses";
-
     }
 
     @GetMapping("/profile")
@@ -146,11 +160,16 @@ public class PageController {
     }
 
     @GetMapping("/browse-courses")
-    public String showBrowseCourses
-        (HttpSession session, Model model) {
+    public String showBrowseCourses(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
         model.addAttribute("user", user);
+        model.addAttribute("courses", courseService.findAllCourses());
+        List<Registration> registrations = registrationService.getRegistrationsByUser(user);
+        List<Long> registeredCourseIds = registrations.stream()
+                .map(r -> r.getCourse().getId())
+                .collect(java.util.stream.Collectors.toList());
+        model.addAttribute("registeredCourseIds", registeredCourseIds);
         return "browse-courses";
     }
     @PostMapping("/profile/update")
@@ -181,5 +200,90 @@ public class PageController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/login";
+    }
+    @GetMapping("/admin/courses")
+    public String showCourses(HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+        model.addAttribute("courses", courseService.findAllCourses());
+        return "admin-courses";
+    }
+
+    @PostMapping("/admin/courses/add")
+    public String addCourse(
+            @RequestParam String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String date,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Integer maxParticipants,
+            @RequestParam(required = false) String instructor,
+            @RequestParam(required = false) String registrationDeadline,
+            @RequestParam(required = false) String endDate,
+            HttpSession session) {
+
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        Course course = new Course();
+        course.setTitle(title);
+        course.setDescription(description);
+        course.setDate(date);
+        course.setLocation(location);
+        course.setMaxParticipants(maxParticipants);
+        course.setInstructor(instructor);
+        course.setRegistrationDeadline(registrationDeadline);
+        course.setEndDate(endDate);
+        courseService.saveCourse(course);
+        return "redirect:/admin/courses";
+    }
+
+    @PostMapping("/admin/courses/delete")
+    public String deleteCourse(@RequestParam Long id, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+        courseService.deleteCourseById(id);
+        return "redirect:/admin/courses";
+    }
+
+    @PostMapping("/courses/register")
+    public String registerForCourse(@RequestParam Long courseId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+        Course course = courseService.findById(courseId);
+        if (course != null) {
+            registrationService.registerUserForCourse(user, course);
+        }
+        return "redirect:/browse-courses";
+    }
+    @PostMapping("/courses/unregister")
+    public String unregisterFromCourse(@RequestParam Long courseId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+        Course course = courseService.findById(courseId);
+        if (course != null) {
+            registrationService.unregisterUserFromCourse(user, course);
+        }
+        return "redirect:/my-courses";
+    }
+    @GetMapping("/admin/member/{id}")
+    public String showMemberDetails(@PathVariable Long id, HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+        User member = userService.findById(id);
+        List<Registration> registrations = registrationService.getRegistrationsByUser(member);
+        model.addAttribute("member", member);
+        model.addAttribute("registrations", registrations);
+        return "admin-member";
+    }
+    @GetMapping("/admin/course/{id}")
+    public String showCourseDetails(@PathVariable Long id, HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        Course course = courseService.findById(id);
+        if (course == null) return "redirect:/admin/courses";
+
+        List<Registration> registrations = registrationService.getRegistrationsByCourse(course);
+
+        model.addAttribute("course", course);
+        model.addAttribute("registrations", registrations);
+        model.addAttribute("participantCount", registrations.size());
+
+        return "admin-course";
     }
 }

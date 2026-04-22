@@ -34,44 +34,23 @@
             </form>
         </nav>
     </aside>
-
-    <!-- MAIN CONTENT -->
     <main class="content">
         <h2>Browse Courses</h2>
-
         <div class="my-courses-grid">
+            <div class="my-course-card" th:each="course : ${courses}">
+                <h3 th:text="${course.title}">Course Title</h3>
+                <p th:text="${course.description != null ? course.description : ''}"></p>
+                <p th:if="${course.date != null}">Date: <strong th:text="${course.date}"></strong></p>
+                <p th:if="${course.location != null}">Location: <strong th:text="${course.location}"></strong></p>
 
-            <div class="my-course-card">
-                <h3>Course 1: Java Programming</h3>
-                <p>Status: <strong>Ongoing</strong></p>
-                <p>Progress: 75%</p>
-                <button class="purple-btn">Continue</button>
+                <form th:action="@{/courses/register}" method="post" th:if="${!registeredCourseIds.contains(course.id)}">
+                    <input type="hidden" name="courseId" th:value="${course.id}">
+                    <button type="submit" class="purple-btn">Register</button>
+                </form>
+                <button class="register-btn" disabled th:if="${registeredCourseIds.contains(course.id)}">Already registered</button>
             </div>
-
-            <div class="my-course-card">
-                <h3>Course 2: Web Development</h3>
-                <p>Status: <strong>Completed</strong></p>
-                <p>Progress: 100%</p>
-                <button class="purple-btn">View Certificate</button>
-            </div>
-
-            <div class="my-course-card">
-                <h3>Course 3: Database Design</h3>
-                <p>Status: <strong>Not started</strong></p>
-                <p>Progress: 0%</p>
-                <button class="purple-btn">Start</button>
-            </div>
+            <p th:if="${#lists.isEmpty(courses)}">No courses available yet.</p>
         </div>
     </main>
-</div>
-<script>
-    document.getElementById("searchInput").addEventListener("input", function() {
-        let q = this.value.toLowerCase()
-        document.querySelectorAll(".my-course-card").forEach(card => {
-            let title = card.querySelector("h3").textContent.toLowerCase()
-            card.style.display = title.includes(q) ? "flex" : "none"
-        })
-    })
-</script>
 </body>
 </html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Member Details</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo">Kompetens 5.0 — Admin</div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="profile">
+            <img src="/Images/Profil.exjobb.jpg">
+            <h3>Administrator</h3>
+            <button class="purple-btn">View Profile</button>
+        </div>
+        <nav>
+            <a href="/admin">Overview</a>
+            <a href="/admin/courses">Courses</a>
+            <a href="#">News</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+
+        <h2 th:text="${member.firstName} + ' ' + ${member.lastName}">Member Name</h2>
+
+        <div class="profile-form" style="margin-bottom: 30px;">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email</label>
+                    <p th:text="${member.email}">-</p>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <p th:text="${member.phone != null ? member.phone : '-'}">-</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Organisation</label>
+                    <p th:text="${member.organisation != null ? member.organisation : '-'}">-</p>
+                </div>
+                <div class="form-group">
+                    <label>Municipality</label>
+                    <p th:text="${member.municipality != null ? member.municipality : '-'}">-</p>
+                </div>
+
+            </div>
+        </div>
+
+        <h3>Registered Courses (<span th:text="${registrations.size()}">0</span>)</h3>
+
+        <div class="table-container">
+            <table class="members-table">
+                <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reg : ${registrations}">
+                    <td th:text="${reg.course.title}">Course</td>
+                    <td th:text="${reg.course.description != null ? reg.course.description : '-'}">-</td>
+                    <td th:text="${reg.course.date != null ? reg.course.date : '-'}">-</td>
+                    <td th:text="${reg.course.location != null ? reg.course.location : '-'}">-</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(registrations)}" style="margin-top: 20px;">
+            <p>This member has not registered for any courses yet.</p>
+        </div>
+    </main>
+</div>
+</body>
+</html>

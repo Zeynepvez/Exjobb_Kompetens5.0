@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Courses</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Kompetens 5.0 — Admin</div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="profile">
+            <img src="/Images/Profil.exjobb.jpg">
+            <h3>Administrator</h3>
+            <button class="purple-btn">View Profile</button>
+        </div>
+        <nav>
+            <a href="/admin">Overview</a>
+            <a href="/admin/courses" class="active">Courses</a>
+            <a href="#">News</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <h2>Manage Courses</h2>
+
+        <div class="card" style="max-width: 900px; margin-bottom: 50px;">
+            <h3>Add New Course</h3>
+
+            <form action="/admin/courses/add" method="post">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start date</label>
+                        <input type="date" id="courseDate" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End date</label>
+                        <input type="date" id="courseEndDate" name="endDate" required>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" required name="description">
+                </div>
+
+                <div class="form-group">
+                    <label>Location / Digital link</label>
+                    <input type="text" name="location" required placeholder="Classroom or meeting link">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Maximum participants</label>
+                        <input type="number" required name="maxParticipants" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Instructor</label>
+                        <input type="text" required name="instructor">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Registration deadline</label>
+                    <input type="date" id="registrationDeadline" name="registrationDeadline" required>
+                </div>
+
+                <button type="submit" class="purple-btn" style="margin-top: 15px;">Add Course</button>
+            </form>
+        </div>
+
+        <h3>All Courses</h3>
+
+        <div class="table-container">
+            <table class="members-table">
+                <thead>
+                <tr>
+
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>End Date</th>
+                    <th>Location</th>
+                    <th>Max Places</th>
+                    <th>Instructor</th>
+                    <th>Deadline</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="course : ${courses}">
+                    <td>
+                        <a th:href="@{/admin/course/{id}(id=${course.id})}"
+                           th:text="${course.title}">Course Title</a>
+                    </td>
+                    <td th:text="${#strings.isEmpty(course.description) ? '-' : course.description}">Description</td>
+                    <td th:text="${#strings.isEmpty(course.date) ? '-' : course.date}">Date</td>
+                    <td th:text="${course.endDate != null ? course.endDate : '-'}">-</td>
+                    <td th:text="${#strings.isEmpty(course.location) ? '-' : course.location}">Location</td>
+                    <td th:text="${course.maxParticipants != null ? course.maxParticipants : '-'}">-</td>
+                    <td th:text="${#strings.isEmpty(course.instructor) ? '-' : course.instructor}">-</td>
+                    <td th:text="${#strings.isEmpty(course.registrationDeadline) ? '-' : course.registrationDeadline}">-</td>
+                    <td>
+                        <form action="/admin/courses/delete" method="post">
+                            <input type="hidden" name="id" th:value="${course.id}">
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(courses)}" class="empty-message">
+            <p>No courses added yet.</p>
+        </div>
+    </main>
+</div>
+<script>
+    const today = new Date().toISOString().split("T")[0];
+
+    const courseDate = document.getElementById("courseDate");
+    const courseEndDate = document.getElementById("courseEndDate");
+    const registrationDeadline = document.getElementById("registrationDeadline");
+
+    if (courseDate && courseEndDate && registrationDeadline) {
+        courseDate.setAttribute("min", today);
+        courseEndDate.setAttribute("min", today);
+        registrationDeadline.setAttribute("min", today);
+
+        courseDate.addEventListener("change", function () {
+            if (courseDate.value) {
+                courseEndDate.setAttribute("min", courseDate.value);
+                registrationDeadline.setAttribute("max", courseDate.value);
+            }
+        });
+    }
+</script>
+</body>
+</html>
