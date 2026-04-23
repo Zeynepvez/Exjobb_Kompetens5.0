@@ -75,12 +75,15 @@
         <input type="hidden" id="hiddenRole" name="role">
         <input type="hidden" id="hiddenMunicipality" name="municipality">
         <label>Password <span style="color:red">*</span></label>
-        <input type="password" id="regPass" name="password" placeholder="Password" required minlength="8">
+        <input type="password" id="regPass" name="password" placeholder="Password" required>
+        <small class="password-hint">Password must be at least 8 characters, 1 digit</small>
+
 
         <label>Confirm password <span style="color:red">*</span></label>
-        <input type="password" id="regPassConfirm" placeholder="Confirm password" required minlength="8">
+        <input type="password" id="regPassConfirm" placeholder="Confirm password" required>
 
         <div class="error-msg" id="passError" style="display:none;">Passwords do not match</div>
+        <div class="error-msg" id="passwordRequirementError" style="display:none;">Password must be at least 8 characters and contain at least 1 digit</div>
         <button type="submit">Create account</button>
     </form>
     <p><button class="link-btn" onclick="showStep1()">Back</button></p>
@@ -104,6 +107,12 @@
         document.getElementById("registerStep2").classList.remove("hidden")
     }
 
+    function validatePasswordRequirements(password) {
+        let hasMinLength = password.length >= 8;
+        let hasDigit = /[0-9]/.test(password);
+        return hasMinLength && hasDigit;
+    }
+
     document.getElementById("step1Form").addEventListener("submit", function(e) {
         e.preventDefault()
         document.getElementById("hiddenFirstName").value = document.getElementById("firstName").value
@@ -120,12 +129,21 @@
         let pass = document.getElementById("regPass").value
         let passConfirm = document.getElementById("regPassConfirm").value
         let errMsg = document.getElementById("passError")
+        let reqError = document.getElementById("passwordRequirementError")
+
+        errMsg.style.display = "none"
+        reqError.style.display = "none"
+
+        if (!validatePasswordRequirements(pass)) {
+            e.preventDefault()
+            reqError.style.display = "block"
+            return
+        }
 
         if (pass !== passConfirm) {
             e.preventDefault()
             errMsg.style.display = "block"
-        } else {
-            errMsg.style.display = "none"
+            return
         }
     })
 </script>

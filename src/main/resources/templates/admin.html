@@ -44,7 +44,7 @@
             <div class="card">
                 <h3>Total Members</h3>
                 <p th:text="${totalMembers} + ' registered members'">0 registered members</p>
-                <button class="purple-btn">Manage Members</button>
+                <button class="purple-btn" onclick="document.getElementById('membersList').scrollIntoView({ behavior: 'smooth' });">Manage Members</button>
             </div>
 
             <div class="card">
@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <h2 class="course-title">All members</h2>
+        <h2 class="course-title" id="membersList">All members</h2>
 
         <div style="margin-bottom: 20px; max-width: 400px;">
             <input type="text" id="memberSearchInput" class="search" placeholder="Search members..."

@@ -430,5 +430,10 @@ public class PageController {
         contactMessageService.deleteMessageById(id);
         return "redirect:/admin/messages";
     }
-
+    @PostMapping("/admin/delete-course")
+    public String deleteCourseAlt(@RequestParam Long id, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+        courseService.deleteCourseById(id);
+        return "redirect:/admin/courses";
+    }
 }
