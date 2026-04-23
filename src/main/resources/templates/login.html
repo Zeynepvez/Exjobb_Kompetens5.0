@@ -15,7 +15,7 @@
         <input type="password" id="loginPassword" name="password" placeholder="Password" required>
 
         <div class="error-msg" th:if="${loginError}" th:text="${loginError}"></div>
-        <button type="submit">Login</button>
+        <button class="purple-btn" type="submit">Login</button>
     </form>
     <p>Don't have an account?</p>
     <p><a href="#" onclick="showStep1(); return false;">Register</a></p>
