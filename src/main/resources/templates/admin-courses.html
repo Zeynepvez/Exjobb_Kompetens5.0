@@ -20,7 +20,8 @@
         </div>
         <nav>
             <a href="/admin">Overview</a>
-            <a href="/admin/courses" class="active">Courses</a>
+            <a href="/admin/courses"  class="active">Courses</a>
+            <a href="/admin/messages">Messages</a>
             <a href="#">News</a>
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="logout-btn">Log out</button>
@@ -116,10 +117,16 @@
                     <td th:text="${#strings.isEmpty(course.instructor) ? '-' : course.instructor}">-</td>
                     <td th:text="${#strings.isEmpty(course.registrationDeadline) ? '-' : course.registrationDeadline}">-</td>
                     <td>
-                        <form action="/admin/courses/delete" method="post">
-                            <input type="hidden" name="id" th:value="${course.id}">
-                            <button type="submit" class="delete-btn">Delete</button>
-                        </form>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <a th:href="@{/admin/course/edit/{id}(id=${course.id})}">
+                                <button type="button" class="purple-btn">Edit</button>
+                            </a>
+
+                            <form action="/admin/courses/delete" method="post" style="margin: 0;">
+                                <input type="hidden" name="id" th:value="${course.id}">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 </tbody>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Course</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Kompetens 5.0 — Admin</div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="profile">
+            <img src="/Images/Profil.exjobb.jpg">
+            <h3>Administrator</h3>
+            <button class="purple-btn" type="button">View Profile</button>
+        </div>
+        <nav>
+            <a href="/admin">Overview</a>
+            <a href="/admin/courses" class="active">Courses</a>
+            <a href="/admin/messages">Messages</a>
+            <a href="#">News</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <h2>Edit Course</h2>
+
+        <div class="card" style="max-width: 900px;">
+            <form action="/admin/course/update" method="post">
+                <input type="hidden" name="id" th:value="${course.id}">
+
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" th:value="${course.title}" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start date</label>
+                        <input type="date" id="courseDate" name="date" th:value="${course.date}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End date</label>
+                        <input type="date" id="courseEndDate" name="endDate" th:value="${course.endDate}" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" name="description" th:value="${course.description}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Location / Digital link</label>
+                    <input type="text" name="location" th:value="${course.location}">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Maximum participants</label>
+                        <input type="number" name="maxParticipants" min="1" th:value="${course.maxParticipants}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Instructor</label>
+                        <input type="text" name="instructor" th:value="${course.instructor}" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Registration deadline</label>
+                    <input type="date" id="registrationDeadline" name="registrationDeadline" th:value="${course.registrationDeadline}" required>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="purple-btn">Save Changes</button>
+                    <a href="/admin/courses">
+                        <button type="button" class="register-btn">Cancel</button>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<script>
+    const today = new Date().toISOString().split("T")[0];
+
+    const courseDate = document.getElementById("courseDate");
+    const courseEndDate = document.getElementById("courseEndDate");
+    const registrationDeadline = document.getElementById("registrationDeadline");
+
+    if (courseDate && courseEndDate && registrationDeadline) {
+        courseDate.setAttribute("min", today);
+        courseEndDate.setAttribute("min", today);
+        registrationDeadline.setAttribute("min", today);
+
+        courseDate.addEventListener("change", function () {
+            if (courseDate.value) {
+                courseEndDate.setAttribute("min", courseDate.value);
+                registrationDeadline.setAttribute("max", courseDate.value);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

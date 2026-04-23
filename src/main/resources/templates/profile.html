@@ -7,7 +7,6 @@
 <body>
 <header class="header">
     <div class="logo">Kompetens 5.0</div>
-
 </header>
 
 <div class="layout">
@@ -15,7 +14,7 @@
         <div class="profile">
             <img src="/Images/Profil.exjobb.jpg">
             <h3 th:text="${user.firstName + ' ' + user.lastName}">Member</h3>
-            <a href="/profile"><button class="purple-btn">View Profile</button></a>
+            <a href="/profile"><button class="purple-btn" type="button">View Profile</button></a>
         </div>
         <nav>
             <a href="/Home">Home</a>
@@ -30,6 +29,7 @@
 
     <main class="content">
         <h2>My Profile</h2>
+
         <div class="profile-form">
             <form th:action="@{/profile/update}" method="post">
                 <div class="form-row">
@@ -42,10 +42,12 @@
                         <input type="text" id="lastName" name="lastName" th:value="${user.lastName}">
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>Email</label>
                     <input type="text" name="email" th:value="${user.email}">
                 </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>Phone</label>
@@ -56,6 +58,7 @@
                         <input type="text" name="municipality" th:value="${user.municipality}">
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>Organisation/Company</label>
@@ -66,8 +69,35 @@
                         <input type="text" name="role" th:value="${user.role}">
                     </div>
                 </div>
+
                 <button type="button" class="purple-btn" id="editBtn" onclick="enableEdit()">Edit profile</button>
                 <button type="submit" class="purple-btn" id="saveBtn" style="display:none">Save changes</button>
+            </form>
+        </div>
+
+        <div class="profile-form" style="margin-top: 30px;">
+            <h3>Change Password</h3>
+
+            <form action="/profile/change-password" method="post">
+                <div class="form-group">
+                    <label>Current password</label>
+                    <input type="password" name="currentPassword" required>
+                </div>
+
+                <div class="form-group">
+                    <label>New password</label>
+                    <input type="password" name="newPassword" required minlength="8">
+                </div>
+
+                <div class="form-group">
+                    <label>Confirm new password</label>
+                    <input type="password" name="confirmPassword" required minlength="8">
+                </div>
+
+                <p th:if="${passwordError}" th:text="${passwordError}" style="color: red; margin-bottom: 10px;"></p>
+                <p th:if="${passwordSuccess}" th:text="${passwordSuccess}" style="color: green; margin-bottom: 10px;"></p>
+
+                <button type="submit" class="purple-btn">Change Password</button>
             </form>
         </div>
     </main>
@@ -75,9 +105,9 @@
 
 <script>
     function enableEdit() {
-        document.querySelectorAll("input").forEach(input => input.disabled = false)
-        document.getElementById("editBtn").style.display = "none"
-        document.getElementById("saveBtn").style.display = "inline"
+        document.querySelectorAll('.profile-form form:first-of-type input').forEach(input => input.disabled = false);
+        document.getElementById("editBtn").style.display = "none";
+        document.getElementById("saveBtn").style.display = "inline";
     }
 </script>
 </body>

@@ -17,11 +17,12 @@ public class PageController {
     private UserService userService;
     private CourseService courseService;
     private RegistrationService registrationService;
-
-    public PageController(UserService userService, CourseService courseService, RegistrationService registrationService) {
+    private ContactMessageService contactMessageService;
+    public PageController(UserService userService, CourseService courseService, RegistrationService registrationService, ContactMessageService contactMessageService) {
         this.userService = userService;
         this.courseService = courseService;
         this.registrationService = registrationService;
+        this.contactMessageService = contactMessageService;
     }
 
 
@@ -48,20 +49,29 @@ public class PageController {
             @RequestParam("password") String password,
             Model model) {
 
-        User existingUser = userService.findByEmail(email);
+        String cleanEmail = email.trim().toLowerCase();
+        String cleanPassword = password.trim();
+
+        User existingUser = userService.findByEmail(cleanEmail);
         if (existingUser != null) {
             model.addAttribute("registerError", "User with this email already exists");
             return "login";
         }
+
+        if (cleanPassword.length() < 8) {
+            model.addAttribute("registerError", "Password must be at least 8 characters");
+            return "login";
+        }
+
         User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
+        user.setFirstName(firstName.trim());
+        user.setLastName(lastName.trim());
+        user.setEmail(cleanEmail);
         user.setPhone(phone);
         user.setOrganisation(organisation);
         user.setRole(role);
         user.setMunicipality(municipality);
-        user.setPassword(password);
+        user.setPassword(cleanPassword);
 
         userService.saveUser(user);
 
@@ -143,14 +153,18 @@ public class PageController {
         String adminEmail = "admin@kompetens.com";
         String adminPassword = "admin123";
 
-        if (adminEmail.equals(email) && adminPassword.equals(password)) {
+        String cleanEmail = email.trim().toLowerCase();
+        String cleanPassword = password.trim();
+
+        if (adminEmail.equals(cleanEmail) && adminPassword.equals(cleanPassword)) {
             session.setAttribute("admin", true);
-            session.setAttribute("adminEmail", email);
+            session.setAttribute("adminEmail", cleanEmail);
             return "redirect:/admin";
         }
-        User user = userService.findByEmail(email);
 
-        if (user != null && user.getPassword().equals(password)) {
+        User user = userService.findByEmail(cleanEmail);
+
+        if (user != null && user.getPassword() != null && user.getPassword().trim().equals(cleanPassword)) {
             session.setAttribute("user", user);
             return "redirect:/Home";
         }
@@ -286,4 +300,135 @@ public class PageController {
 
         return "admin-course";
     }
+    @PostMapping("/contact/send")
+    public String sendContactMessage(
+            @RequestParam String subject,
+            @RequestParam String message,
+            HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+
+        ContactMessage contactMessage = new ContactMessage();
+        contactMessage.setSenderName(user.getFirstName() + " " + user.getLastName());
+        contactMessage.setSenderEmail(user.getEmail());
+        contactMessage.setSubject(subject);
+        contactMessage.setMessage(message);
+
+        contactMessageService.saveMessage(contactMessage);
+
+        return "redirect:/contact";
+    }
+    @GetMapping("/admin/messages")
+    public String showAdminMessages(HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        model.addAttribute("messages", contactMessageService.findAllMessages());
+        return "admin-messages";
+    }
+    @GetMapping("/admin/message/{id}")
+    public String showAdminMessageDetails(@PathVariable Long id, HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        ContactMessage message = contactMessageService.findById(id);
+        if (message == null) return "redirect:/admin/messages";
+
+        model.addAttribute("message", message);
+        return "admin-message";
+    }
+
+    @PostMapping("/profile/change-password")
+    public String changePassword(
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            HttpSession session,
+            Model model) {
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+
+        String cleanCurrentPassword = currentPassword.trim();
+        String cleanNewPassword = newPassword.trim();
+        String cleanConfirmPassword = confirmPassword.trim();
+
+        if (!user.getPassword().trim().equals(cleanCurrentPassword)) {
+            model.addAttribute("user", user);
+            model.addAttribute("passwordError", "Current password is incorrect");
+            return "profile";
+        }
+
+        if (cleanNewPassword.length() < 8) {
+            model.addAttribute("user", user);
+            model.addAttribute("passwordError", "New password must be at least 8 characters");
+            return "profile";
+        }
+
+        if (!cleanNewPassword.equals(cleanConfirmPassword)) {
+            model.addAttribute("user", user);
+            model.addAttribute("passwordError", "New passwords do not match");
+            return "profile";
+        }
+
+        user.setPassword(cleanNewPassword);
+        userService.saveUser(user);
+
+        User updatedUser = userService.findByEmail(user.getEmail());
+        session.setAttribute("user", updatedUser);
+
+        model.addAttribute("user", updatedUser);
+        model.addAttribute("passwordSuccess", "Password updated successfully");
+        return "profile";
+    }
+    @GetMapping("/admin/course/edit/{id}")
+    public String showEditCoursePage(@PathVariable Long id, HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        Course course = courseService.findById(id);
+        if (course == null) return "redirect:/admin/courses";
+
+        model.addAttribute("course", course);
+        return "admin-edit-course";
+    }
+
+    @PostMapping("/admin/course/update")
+    public String updateCourse(
+            @RequestParam Long id,
+            @RequestParam String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String date,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Integer maxParticipants,
+            @RequestParam(required = false) String instructor,
+            @RequestParam(required = false) String registrationDeadline,
+            HttpSession session) {
+
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        Course course = courseService.findById(id);
+        if (course == null) return "redirect:/admin/courses";
+
+        course.setTitle(title);
+        course.setDescription(description);
+        course.setDate(date);
+        course.setEndDate(endDate);
+        course.setLocation(location);
+        course.setMaxParticipants(maxParticipants);
+        course.setInstructor(instructor);
+        course.setRegistrationDeadline(registrationDeadline);
+
+        courseService.saveCourse(course);
+
+        return "redirect:/admin/courses";
+    }
+
+    @PostMapping("/admin/message/delete")
+    public String deleteMessage(@RequestParam Long id, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        contactMessageService.deleteMessageById(id);
+        return "redirect:/admin/messages";
+    }
+
 }

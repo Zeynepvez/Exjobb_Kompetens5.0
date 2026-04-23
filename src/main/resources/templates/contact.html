@@ -32,21 +32,19 @@
 
     <main class="content">
         <h2>Contact us</h2>
-    <div class="card">
-        <h3>Send message</h3>
-        <form>
-            <div class="form-group">
-                <input type="text" placeholder="Your name" required>
-            </div>
-            <div class="form-group">
-                <input type="email" placeholder="Your email" required>
-            </div>
-            <div class="form-group">
-                <textarea placeholder="Your message..." rows="5" required></textarea>
-            </div>
-            <button type="submit" class="visit-btn">Send</button>
-        </form>
-    </div>
+        <div class="card">
+            <h3>Send message</h3>
+            <p th:text="'Logged in as: ' + ${user.firstName} + ' ' + ${user.lastName} + ' (' + ${user.email} + ')'"></p>
+            <form action="/contact/send" method="post">
+                <div class="form-group">
+                    <input type="text" name="subject" placeholder="Subject" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" placeholder="Your message..." rows="5" required></textarea>
+                </div>
+                <button type="submit" class="visit-btn">Send</button>
+            </form>
+        </div>
 
 
         <div class="card">

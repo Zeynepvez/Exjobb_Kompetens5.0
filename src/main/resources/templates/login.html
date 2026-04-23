@@ -12,7 +12,8 @@
     <h2>Login</h2>
     <form th:action="@{/login}" method="post">
         <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" id="loginPassword" name="password" placeholder="Password" required>
+
         <div class="error-msg" th:if="${loginError}" th:text="${loginError}"></div>
         <button type="submit">Login</button>
     </form>
@@ -74,10 +75,12 @@
         <input type="hidden" id="hiddenRole" name="role">
         <input type="hidden" id="hiddenMunicipality" name="municipality">
         <label>Password <span style="color:red">*</span></label>
-        <input type="password" id="regPass" name="password" placeholder="Password" required>
+        <input type="password" id="regPass" name="password" placeholder="Password" required minlength="8">
+
         <label>Confirm password <span style="color:red">*</span></label>
-        <input type="password" id="regPassConfirm" placeholder="Confirm password" required>
-        <div class="error-msg" id="passError">Passwords do not match</div>
+        <input type="password" id="regPassConfirm" placeholder="Confirm password" required minlength="8">
+
+        <div class="error-msg" id="passError" style="display:none;">Passwords do not match</div>
         <button type="submit">Create account</button>
     </form>
     <p><button class="link-btn" onclick="showStep1()">Back</button></p>
@@ -103,7 +106,6 @@
 
     document.getElementById("step1Form").addEventListener("submit", function(e) {
         e.preventDefault()
-        // Flytta data till hidden fields i step2
         document.getElementById("hiddenFirstName").value = document.getElementById("firstName").value
         document.getElementById("hiddenLastName").value = document.getElementById("lastName").value
         document.getElementById("hiddenEmail").value = document.getElementById("regEmail").value
@@ -118,9 +120,12 @@
         let pass = document.getElementById("regPass").value
         let passConfirm = document.getElementById("regPassConfirm").value
         let errMsg = document.getElementById("passError")
+
         if (pass !== passConfirm) {
             e.preventDefault()
             errMsg.style.display = "block"
+        } else {
+            errMsg.style.display = "none"
         }
     })
 </script>
