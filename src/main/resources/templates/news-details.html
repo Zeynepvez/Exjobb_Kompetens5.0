@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+      <html lang="en" xmlns:th="http://www.thymeleaf.org">
+      <head>
+      <meta charset="UTF-8">
+      <title>News Details</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">Kompetens 5.0</div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="profile">
+      <img src="/Images/Profil.exjobb.jpg">
+      <h3 th:text="${user.firstName + ' ' + user.lastName}">Member</h3>
+      <a href="/profile"><button class="purple-btn">View Profile</button></a>
+    </div>
+
+    <nav>
+      <a href="/Home">Home</a>
+      <a href="/my-courses">My courses</a>
+      <a href="/browse-courses">Browse courses</a>
+      <a href="/contact">Contact</a>
+      <a href="/news" class="active">News</a>
+      <form th:action="@{/logout}" method="post">
+        <button type="submit" class="logout-btn">Log out</button>
+      </form>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <a href="/news">← Back to News</a>
+
+    <div class="card" style="max-width: 1000px; margin-top: 20px;">
+      <h2 th:text="${news.title}">News title</h2>
+      <p><strong th:text="${news.publishDate}">Date</strong></p>
+      <p th:text="${news.content}" style="white-space: pre-line;">News content</p>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

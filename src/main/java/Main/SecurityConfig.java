@@ -14,9 +14,16 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable())
                 .headers(headers -> headers
                         .frameOptions(frame -> frame.disable())
                 );
         return http.build();
+    }
+
+    @Bean
+    public org.springframework.security.core.userdetails.UserDetailsService userDetailsService() {
+        return username -> { throw new org.springframework.security.core.userdetails.UsernameNotFoundException("disabled"); };
     }
 }

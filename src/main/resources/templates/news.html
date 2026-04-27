@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>News</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Kompetens 5.0</div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="profile">
+            <img src="/Images/Profil.exjobb.jpg">
+            <h3 th:text="${user.firstName + ' ' + user.lastName}">Member</h3>
+            <a href="/profile"><button class="purple-btn">View Profile</button></a>
+        </div>
+
+        <nav>
+            <a href="/Home">Home</a>
+            <a href="/my-courses">My courses</a>
+            <a href="/browse-courses">Browse courses</a>
+            <a href="/news" class="active">News</a>
+            <a href="/contact">Contact</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <h2>News</h2>
+
+        <div class="my-courses-grid">
+            <div class="my-course-card" th:each="item : ${newsList}">
+                <h3 th:text="${item.title}">Title</h3>
+                <p><strong th:text="${item.publishDate}">Date</strong></p>
+                <a th:href="@{/news/{id}(id=${item.id})}">
+                    <button type="button" class="purple-btn">Read more</button>
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(newsList)}" class="empty-message">
+            <p>No news available yet.</p>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

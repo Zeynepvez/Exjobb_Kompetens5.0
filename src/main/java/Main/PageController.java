@@ -18,11 +18,13 @@ public class PageController {
     private CourseService courseService;
     private RegistrationService registrationService;
     private ContactMessageService contactMessageService;
-    public PageController(UserService userService, CourseService courseService, RegistrationService registrationService, ContactMessageService contactMessageService) {
+    private NewsService newsService;
+    public PageController(UserService userService, CourseService courseService, RegistrationService registrationService, ContactMessageService contactMessageService, NewsService newsService) {
         this.userService = userService;
         this.courseService = courseService;
         this.registrationService = registrationService;
         this.contactMessageService = contactMessageService;
+        this.newsService = newsService;
     }
 
 
@@ -210,6 +212,19 @@ public class PageController {
         session.setAttribute("user", user);
         return "redirect:/profile";
     }
+    @PostMapping("/profile/delete")
+    public String deleteAccount(HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+
+        userService.deleteUserById(user.getId());
+
+        session.invalidate(); // loggar ut direkt
+
+        return "redirect:/login";
+    }
+
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
@@ -435,5 +450,113 @@ public class PageController {
         if (session.getAttribute("admin") == null) return "redirect:/login";
         courseService.deleteCourseById(id);
         return "redirect:/admin/courses";
+    }
+    @GetMapping("/admin/news")
+    public String showAdminNews(HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        model.addAttribute("newsList", newsService.findAllNews());
+        return "admin-news";
+    }
+
+    @PostMapping("/admin/news/add")
+    public String addNews(@RequestParam String title,
+                          @RequestParam String content,
+                          @RequestParam String publishDate,
+                          HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        News news = new News();
+        news.setTitle(title);
+        news.setContent(content);
+        news.setPublishDate(publishDate);
+
+        newsService.saveNews(news);
+        return "redirect:/admin/news";
+    }
+
+    @PostMapping("/admin/news/delete")
+    public String deleteNews(@RequestParam Long id, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        newsService.deleteNewsById(id);
+        return "redirect:/admin/news";
+    }
+
+    @GetMapping("/news")
+    public String showUserNews(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+
+        model.addAttribute("user", user);
+        model.addAttribute("newsList", newsService.findAllNews());
+        return "news";
+    }
+
+    @GetMapping("/news/{id}")
+    public String showNewsDetails(@PathVariable Long id, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+
+        News news = newsService.findById(id);
+        if (news == null) return "redirect:/news";
+
+        model.addAttribute("user", user);
+        model.addAttribute("news", news);
+        return "news-details";
+    }
+    @GetMapping("/admin/news/edit/{id}")
+    public String showEditNewsPage(@PathVariable Long id,
+                                   HttpSession session,
+                                   Model model) {
+
+        if (session.getAttribute("admin") == null)
+            return "redirect:/login";
+
+        News news = newsService.findById(id);
+        if (news == null)
+            return "redirect:/admin/news";
+
+        model.addAttribute("news", news);
+
+        return "admin-edit-news";
+    }
+    @PostMapping("/admin/news/update")
+    public String updateNews(@RequestParam Long id,
+                             @RequestParam String title,
+                             @RequestParam String content,
+                             @RequestParam String publishDate,
+                             HttpSession session) {
+
+        if (session.getAttribute("admin") == null)
+            return "redirect:/login";
+
+        News news = newsService.findById(id);
+        if (news == null)
+            return "redirect:/admin/news";
+
+        news.setTitle(title);
+        news.setContent(content);
+        news.setPublishDate(publishDate);
+
+        newsService.saveNews(news);
+
+        return "redirect:/admin/news";
+    }
+    @GetMapping("/admin/news/{id}")
+    public String showAdminNewsDetails(@PathVariable Long id,
+                                       HttpSession session,
+                                       Model model) {
+
+        if (session.getAttribute("admin") == null)
+            return "redirect:/login";
+
+        News news = newsService.findById(id);
+        if (news == null)
+            return "redirect:/admin/news";
+
+        model.addAttribute("news", news);
+
+        return "admin-news-details";
     }
 }

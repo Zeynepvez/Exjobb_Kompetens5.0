@@ -14,6 +14,7 @@
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" id="loginPassword" name="password" placeholder="Password" required>
 
+
         <div class="error-msg" th:if="${loginError}" th:text="${loginError}"></div>
         <button class="purple-btn" type="submit">Login</button>
     </form>
@@ -146,6 +147,7 @@
             return
         }
     })
+
 </script>
 
 </body>

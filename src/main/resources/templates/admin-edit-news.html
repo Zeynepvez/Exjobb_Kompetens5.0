@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit News</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">Kompetens 5.0 — Admin</div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="profile">
+      <img src="/Images/Profil.exjobb.jpg">
+      <h3>Administrator</h3>
+      <button class="purple-btn">View Profile</button>
+    </div>
+
+    <nav>
+      <a href="/admin">Overview</a>
+      <a href="/admin/courses">Courses</a>
+      <a href="/admin/messages">Messages</a>
+      <a href="/admin/news" class="active">News</a>
+      <form th:action="@{/logout}" method="post">
+        <button type="submit" class="logout-btn">Log out</button>
+      </form>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="content">
+    <h2>Edit News</h2>
+
+    <div class="card" style="max-width: 900px;">
+      <form action="/admin/news/update" method="post">
+        <input type="hidden" name="id" th:value="${news.id}">
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" name="title" th:value="${news.title}" required>
+        </div>
+
+        <div class="form-group">
+          <label>Publish Date</label>
+          <input type="date" name="publishDate" th:value="${news.publishDate}" required>
+        </div>
+
+        <div class="form-group">
+          <label>Content</label>
+          <textarea name="content" rows="8" required
+                    th:text="${news.content}"></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button type="submit" class="purple-btn">Save Changes</button>
+
+          <a href="/admin/news">
+            <button type="button" class="register-btn">Cancel</button>
+          </a>
+        </div>
+      </form>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
