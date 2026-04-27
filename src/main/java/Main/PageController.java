@@ -15,11 +15,11 @@ import java.util.Map;
 
 @Controller
 public class PageController {
-    private UserService userService;
-    private CourseService courseService;
-    private RegistrationService registrationService;
-    private ContactMessageService contactMessageService;
-    private NewsService newsService;
+    private final UserService userService;
+    private final CourseService courseService;
+    private final RegistrationService registrationService;
+    private final ContactMessageService contactMessageService;
+    private final NewsService newsService;
     public PageController(UserService userService, CourseService courseService, RegistrationService registrationService, ContactMessageService contactMessageService, NewsService newsService) {
         this.userService = userService;
         this.courseService = courseService;
