@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -150,7 +151,7 @@ public class PageController {
             @RequestParam("email") String email,
             @RequestParam("password") String password,
             HttpSession session,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
 
         String adminEmail = "admin@kompetens.com";
         String adminPassword = "admin123";
@@ -160,19 +161,18 @@ public class PageController {
 
         if (adminEmail.equals(cleanEmail) && adminPassword.equals(cleanPassword)) {
             session.setAttribute("admin", true);
-            session.setAttribute("adminEmail", cleanEmail);
             return "redirect:/admin";
         }
 
         User user = userService.findByEmail(cleanEmail);
 
-        if (user != null && user.getPassword() != null && user.getPassword().trim().equals(cleanPassword)) {
+        if (user != null && user.getPassword().trim().equals(cleanPassword)) {
             session.setAttribute("user", user);
             return "redirect:/Home";
         }
 
-        model.addAttribute("loginError", "Invalid email or password");
-        return "login";
+        redirectAttributes.addFlashAttribute("loginError", "Invalid email or password");
+        return "redirect:/login";
     }
 
     @GetMapping("/browse-courses")
