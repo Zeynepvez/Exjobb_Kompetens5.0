@@ -120,6 +120,9 @@
                 <div th:if="${#lists.isEmpty(members)}" class="empty-message">
                     <p>No members registered yet.</p>
                 </div>
+        <a href="/admin/export/members">
+            <button class="purple-btn" style="margin-top: 20px"> Export Members (CSV) </button>
+        </a>
     </main>
 </div>
 

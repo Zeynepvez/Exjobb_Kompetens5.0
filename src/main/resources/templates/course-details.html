@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${course.title}">Course</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Kompetens 5.0</div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="profile">
+            <img src="/Images/Profil.exjobb.jpg">
+            <h3 th:text="${user.firstName + ' ' + user.lastName}">Member</h3>
+            <a href="/profile"><button class="purple-btn">View Profile</button></a>
+        </div>
+        <nav>
+            <a href="/Home">Home</a>
+            <a href="/my-courses">My courses</a>
+            <a href="/browse-courses" class="active">Browse courses</a>
+            <a href="/news">News</a>
+            <a href="/contact">Contact</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <a href="/browse-courses" style="font-size:14px; color: darkcyan; text-decoration: none;">← Back to courses</a>
+
+        <div class="course-detail-card">
+            <h2 th:text="${course.title}">Course title</h2>
+
+            <div class="course-detail-grid">
+                <div class="course-detail-item">
+                    <span class="detail-label"> Start date</span>
+                    <span th:text="${course.date != null ? course.date : 'TBD'}">Date</span>
+                </div>
+                <div class="course-detail-item">
+                    <span class="detail-label"> End date</span>
+                    <span th:text="${course.endDate != null ? course.endDate : 'TBD'}">End date</span>
+                </div>
+                <div class="course-detail-item">
+                    <span class="detail-label"> Location</span>
+                    <span th:text="${course.location != null ? course.location : 'TBD'}">Location</span>
+                </div>
+                <div class="course-detail-item">
+                    <span class="detail-label"> Instructor</span>
+                    <span th:text="${course.instructor != null ? course.instructor : 'TBD'}">Instructor</span>
+                </div>
+                <div class="course-detail-item">
+                    <span class="detail-label"> Max participants</span>
+                    <span th:text="${course.maxParticipants != null ? course.maxParticipants : 'Unlimited'}">Max</span>
+                </div>
+                <div class="course-detail-item">
+                    <span class="detail-label"> Registration deadline</span>
+                    <span th:text="${course.registrationDeadline != null ? course.registrationDeadline : 'TBD'}">Deadline</span>
+                </div>
+            </div>
+
+            <div class="course-description" th:if="${course.description != null}">
+                <h3>About this course</h3>
+                <p th:text="${course.description}">Description</p>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <form th:if="${!isRegistered}" th:action="@{/courses/register}" method="post">
+                    <input type="hidden" name="courseId" th:value="${course.id}">
+                    <button type="submit" class="purple-btn">Register for course</button>
+                </form>
+                <div th:if="${isRegistered}">
+                    <span style="color: darkcyan; font-weight: 600;">✓ You are registered for this course</span>
+                    <form th:action="@{/courses/unregister}" method="post" style="margin-top: 10px;">
+                        <input type="hidden" name="courseId" th:value="${course.id}">
+                        <button type="submit" class="delete-btn">Unregister</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

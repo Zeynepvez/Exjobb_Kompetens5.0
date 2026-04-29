@@ -2,86 +2,114 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-
+    <title>Home</title>
     <link rel="stylesheet" href="/css/style.css">
+
 </head>
-
-
 <body>
+
 <header class="header">
-
     <div class="logo">Kompetens 5.0</div>
-    <input type="text" class="search" id="searchInput" placeholder="search courses...">
-
+    <input type="text" class="search" id="searchInput" placeholder="Search courses...">
 </header>
 
 <div class="layout">
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="profile">
             <img src="/Images/Profil.exjobb.jpg">
             <h3 th:text="${user.firstName + ' ' + user.lastName}">Member</h3>
-
             <a href="/profile"><button class="purple-btn">View Profile</button></a>
         </div>
-
-
         <nav>
             <a href="/Home" class="active">Home</a>
             <a href="/my-courses">My courses</a>
             <a href="/browse-courses">Browse courses</a>
             <a href="/news">News</a>
             <a href="/contact">Contact</a>
-            <form th:action="@{/logout}" method="post" >
+            <form th:action="@{/logout}" method="post">
                 <button type="submit" class="logout-btn">Log out</button>
             </form>
         </nav>
     </aside>
 
-    <!-- MAIN  -->
     <main class="content">
 
-        <div class="cards">
-            <div class="card">
+        <!-- Välkomstbanner -->
+        <div class="welcome-banner">
+            <h2 th:text="'Welcome back, ' + ${user.firstName} + '!'">Welcome back!</h2>
+            <p>Here's what's happening at Kompetens 5.0</p>
+        </div>
 
-                <h3>My Registrations</h3>
-                <p>View and manage your course registrations</p>
-                <button class="purple-btn" onclick="location.href='/my-courses'">View Registrations</button>
+        <!-- Snabblänkar -->
+        <div class="quick-cards">
+            <div class="quick-card">
+                <div class="quick-card-icon">📋</div>
+                <div>
+                    <h4>My Registrations</h4>
+                    <p>View and manage your courses</p>
+                    <button class="purple-btn" onclick="location.href='/my-courses'">View</button>
+                </div>
+            </div>
+            <div class="quick-card">
+                <div class="quick-card-icon">🌐</div>
+                <div>
+                    <h4>About Kompetens 5.0</h4>
+                    <p>Learn more about our mission</p>
+                    <button class="purple-btn" onclick="window.open('https://comptelligence.org/about/', '_blank')">Visit website</button>
+                </div>
+            </div>
+        </div>
 
+        <!-- Kurser + Nyheter -->
+        <div class="home-grid">
+
+            <!-- Upcoming Courses -->
+            <div>
+                <div class="section-title">Upcoming Courses</div>
+
+                <div th:if="${#lists.isEmpty(courses)}" class="empty-state">
+                    No upcoming courses at the moment.
+                </div>
+
+                <div th:each="course : ${courses}" class="course-card" id="course-item">
+                    <div>
+                        <h4 th:text="${course.title}">Course title</h4>
+                        <p th:text="${course.date != null ? course.date : 'Date TBD'}">Date</p>
+                    </div>
+                    <a th:href="@{/courses/{id}(id=${course.id})}">
+                        <button class="purple-btn">View</button>
+                    </a>
+                </div>
             </div>
 
-            <div class="card">
-                <h3>About Competence 5.0</h3>
-                <p>Learn more about our platform and mission</p>
-                <button class="purple-btn" onclick="window.open('https://comptelligence.org/about/', '_blank')">Visit website </button>
+            <!-- Latest News -->
+            <div>
+                <div class="section-title">Latest News</div>
+
+                <div th:if="${#lists.isEmpty(newsList)}" class="empty-state">
+                    No news published yet.
+                </div>
+
+                <div th:each="item : ${newsList}" class="news-card"
+                     th:onclick="'location.href=\'/news/' + ${item.id} + '\''">
+                    <h4 th:text="${item.title}">News title</h4>
+                    <p th:text="${item.publishDate}">Date</p>
+                </div>
             </div>
-        </div>
 
-        <h2 class="course-title">Upcoming courses</h2>
-        <div class="course">
-        <div class="courses">
-            <h4>Course 1</h4>
-            <button class="register-btn">Register</button>
         </div>
-        <div class="courses">
-            <h4>Course 2</h4>
-            <button class="register-btn">Register</button>
-        </div>
-        <div class="courses">
-            <h4>Course 3</h4>
-            <button class="register-btn">Register</button>
-        </div>
-        </div>
-
     </main>
 </div>
+
 <script>
-document.getElementById("searchInput").addEventListener("input", function() {
-    let q = this.value.toLowerCase()
-    document.querySelectorAll(".courses").forEach(card => {
-        let title = card.querySelector("h4").textContent.toLowerCase()
-        card.style.display = title.includes(q) ? "block" : "none"
+    document.getElementById("searchInput").addEventListener("input", function() {
+        let q = this.value.toLowerCase()
+        document.querySelectorAll(".course-card").forEach(card => {
+            let title = card.querySelector("h4").textContent.toLowerCase()
+            card.style.display = title.includes(q) ? "flex" : "none"
+        })
     })
-})
 </script>
+
 </body>
+</html>

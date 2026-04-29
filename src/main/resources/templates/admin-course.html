@@ -82,9 +82,14 @@
             </table>
         </div>
 
+        <a th:href="@{/admin/export/course/{id}(id=${course.id})}" style="display: block; margin-top: 20px">
+            <button class="purple-btn">Export Participants (CSV)</button>
+        </a>
+
         <div th:if="${#lists.isEmpty(registrations)}" style="margin-top: 20px;">
             <p>No members are registered for this course yet.</p>
         </div>
+
     </main>
 </div>
 </body>

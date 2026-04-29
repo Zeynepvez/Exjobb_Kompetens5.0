@@ -1,5 +1,6 @@
 package Main;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +87,14 @@ public class PageController {
     public String showHome(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
+
         model.addAttribute("user", user);
+
+
+        model.addAttribute("courses", courseService.findAllCourses());
+
+        model.addAttribute("newsList", newsService.findAllNews());
+
         return "Home";
     }
 
@@ -300,21 +309,7 @@ public class PageController {
         model.addAttribute("registrations", registrations);
         return "admin-member";
     }
-    @GetMapping("/admin/course/{id}")
-    public String showCourseDetails(@PathVariable Long id, HttpSession session, Model model) {
-        if (session.getAttribute("admin") == null) return "redirect:/login";
 
-        Course course = courseService.findById(id);
-        if (course == null) return "redirect:/admin/courses";
-
-        List<Registration> registrations = registrationService.getRegistrationsByCourse(course);
-
-        model.addAttribute("course", course);
-        model.addAttribute("registrations", registrations);
-        model.addAttribute("participantCount", registrations.size());
-
-        return "admin-course";
-    }
     @PostMapping("/contact/send")
     public String sendContactMessage(
             @RequestParam String subject,
@@ -558,5 +553,112 @@ public class PageController {
         model.addAttribute("news", news);
 
         return "admin-news-details";
+    }
+
+    @GetMapping("/admin/course/{id}")
+    public String showAdminCourseDetails(@PathVariable Long id, HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        Course course = courseService.findById(id);
+        if (course == null) return "redirect:/admin/courses";
+
+        List<Registration> registrations = registrationService.getRegistrationsByCourse(course);
+
+        model.addAttribute("course", course);
+        model.addAttribute("registrations", registrations);
+        model.addAttribute("participantCount", registrations.size());
+
+        return "admin-course";
+    }
+
+    @GetMapping("/admin/export/members")
+    public void exportMembers(HttpSession session, HttpServletResponse response) throws Exception {
+        if (session.getAttribute("admin") == null) {
+            response.sendRedirect("/login");
+            return;
+        }
+
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=members.csv");
+
+        List<User> users = userService.findAllUsers();
+        PrintWriter writer = response.getWriter();
+        writer.println("First Name,Last Name,Email,Phone,Organisation,Role,Municipality");
+
+        for (User u : users) {
+            writer.println(
+                    csvField(u.getFirstName()) + "," +
+                            csvField(u.getLastName()) + "," +
+                            csvField(u.getEmail()) + "," +
+                            csvField(u.getPhone()) + "," +
+                            csvField(u.getOrganisation()) + "," +
+                            csvField(u.getRole()) + "," +
+                            csvField(u.getMunicipality())
+            );
+        }
+        writer.flush();
+    }
+
+    @GetMapping("/admin/export/course/{id}")
+    public void exportCourseParticipants(@PathVariable Long id, HttpSession session, HttpServletResponse response) throws Exception {
+        if (session.getAttribute("admin") == null) {
+            response.sendRedirect("/login");
+            return;
+        }
+
+        Course course = courseService.findById(id);
+        if (course == null) {
+            response.sendRedirect("/admin/courses");
+            return;
+        }
+
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=participants-" + id + ".csv");
+
+        List<Registration> registrations = registrationService.getRegistrationsByCourse(course);
+        PrintWriter writer = response.getWriter();
+        writer.println("First Name,Last Name,Email,Phone,Organisation,Role,Municipality");
+
+        for (Registration r : registrations) {
+            User u = r.getUser();
+            writer.println(
+                    csvField(u.getFirstName()) + "," +
+                            csvField(u.getLastName()) + "," +
+                            csvField(u.getEmail()) + "," +
+                            csvField(u.getPhone()) + "," +
+                            csvField(u.getOrganisation()) + "," +
+                            csvField(u.getRole()) + "," +
+                            csvField(u.getMunicipality())
+            );
+        }
+        writer.flush();
+    }
+
+    private String csvField(String value) {
+        if (value == null) return "";
+        return "\"" + value.replace("\"", "\"\"") + "\"";
+    }
+    @GetMapping("/courses/{id}")
+    public String showCourseDetails(@PathVariable Long id,
+                                    HttpSession session,
+                                    Model model) {
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+
+        Course course = courseService.findById(id);
+        if (course == null) return "redirect:/Home";
+
+        List<Registration> registrations =
+                registrationService.getRegistrationsByUser(user);
+
+        boolean isRegistered = registrations.stream()
+                .anyMatch(r -> r.getCourse().getId().equals(id));
+
+        model.addAttribute("user", user);
+        model.addAttribute("course", course);
+        model.addAttribute("isRegistered", isRegistered);
+
+        return "course-details";
     }
 }
