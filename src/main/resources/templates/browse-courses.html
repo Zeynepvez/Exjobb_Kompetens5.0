@@ -6,7 +6,21 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchInput');
+        const courseCards = document.querySelectorAll('.my-course-card');
 
+        searchInput.addEventListener('input', function () {
+            const query = this.value.toLowerCase().trim();
+
+            courseCards.forEach(function (card) {
+                const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+                const description = card.querySelector('p')?.textContent.toLowerCase() || '';
+                const matches = title.includes(query) || description.includes(query);
+                card.style.display = matches ? '' : 'none';
+            });
+        });
+    });
 </script>
 
 <body>

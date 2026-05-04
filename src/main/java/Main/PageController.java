@@ -22,12 +22,14 @@ public class PageController {
     private final RegistrationService registrationService;
     private final ContactMessageService contactMessageService;
     private final NewsService newsService;
-    public PageController(UserService userService, CourseService courseService, RegistrationService registrationService, ContactMessageService contactMessageService, NewsService newsService) {
+    private final EmailService emailService;
+    public PageController(UserService userService, CourseService courseService, RegistrationService registrationService, ContactMessageService contactMessageService, NewsService newsService, EmailService emailService) {
         this.userService = userService;
         this.courseService = courseService;
         this.registrationService = registrationService;
         this.contactMessageService = contactMessageService;
         this.newsService = newsService;
+        this.emailService = emailService;
     }
 
 
@@ -79,6 +81,14 @@ public class PageController {
         user.setPassword(cleanPassword);
 
         userService.saveUser(user);
+
+        emailService.sendEmail(
+                user.getEmail(),
+                "Welcome to Kompetens 5.0",
+                "Hi " + user.getFirstName() + ",\n\n" +
+                        "You have successfully registered as a member.\n\n" +
+                        "Welcome!"
+        );
 
         return "redirect:/login";
     }
@@ -287,6 +297,15 @@ public class PageController {
         Course course = courseService.findById(courseId);
         if (course != null) {
             registrationService.registerUserForCourse(user, course);
+
+            emailService.sendEmail(
+                    user.getEmail(),
+                    "Course Registration Confirmation",
+                    "Hi " + user.getFirstName() + ",\n\n" +
+                            "You are now registered for:\n" +
+                            course.getTitle() + "\n\n" +
+                            "Date: " + course.getDate()
+            );
         }
         return "redirect:/browse-courses";
     }
