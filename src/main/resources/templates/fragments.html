@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragments</title>
+</head>
+<body>
+
+<header th:fragment="header" class="header">
+    <div class="logo">Kompetens 5.0</div>
+    <input type="text" class="search" id="searchInput" placeholder="Search courses...">
+</header>
+
+<aside th:fragment="sidebar" class="sidebar">
+    <div class="profile">
+        <img src="/Images/Profil.exjobb.jpg" th:src="@{/Images/Profil.exjobb.jpg}">
+        <h3 th:text="${user.firstName + ' ' + user.lastName}">Member</h3>
+        <a th:href="@{/profile}">
+            <button class="purple-btn">View Profile</button>
+        </a>
+    </div>
+    <nav>
+        <a th:href="@{/Home}" th:class="${currentPage == 'home' ? 'active' : ''}">Home</a>
+        <a th:href="@{/my-courses}" th:class="${currentPage == 'mycourses' ? 'active' : ''}">My courses</a>
+        <a th:href="@{/browse-courses}" th:class="${currentPage == 'browse' ? 'active' : ''}">Browse courses</a>
+        <a th:href="@{/news}" th:class="${currentPage == 'news' ? 'active' : ''}">News</a>
+        <a th:href="@{/contact}" th:class="${currentPage == 'contact' ? 'active' : ''}">Contact</a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">Log out</button>
+        </form>
+    </nav>
+</aside>
+
+</body>
+</html>

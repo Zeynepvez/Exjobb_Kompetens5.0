@@ -3,44 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
 
 </head>
 <body>
 
-<header class="header">
-    <div class="logo">Kompetens 5.0</div>
-    <input type="text" class="search" id="searchInput" placeholder="Search courses...">
-</header>
+<div th:replace="~{fragments :: header}"></div>
 
 <div class="layout">
-    <aside class="sidebar">
-        <div class="profile">
-            <img src="/Images/Profil.exjobb.jpg">
-            <h3 th:text="${user.firstName + ' ' + user.lastName}">Member</h3>
-            <a href="/profile"><button class="purple-btn">View Profile</button></a>
-        </div>
-        <nav>
-            <a href="/Home" class="active">Home</a>
-            <a href="/my-courses">My courses</a>
-            <a href="/browse-courses">Browse courses</a>
-            <a href="/news">News</a>
-            <a href="/contact">Contact</a>
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="logout-btn">Log out</button>
-            </form>
-        </nav>
-    </aside>
+    <div th:replace="~{fragments :: sidebar}"></div>
 
     <main class="content">
 
-        <!-- Välkomstbanner -->
+
         <div class="welcome-banner">
             <h2 th:text="'Welcome back, ' + ${user.firstName} + '!'">Welcome back!</h2>
             <p>Here's what's happening at Kompetens 5.0</p>
         </div>
 
-        <!-- Snabblänkar -->
+
         <div class="quick-cards">
             <div class="quick-card">
                 <div class="quick-card-icon">📋</div>

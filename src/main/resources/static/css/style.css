@@ -114,6 +114,11 @@ nav form button {
     text-align: left;
     display: block;
 }
+
+nav a.active {
+    font-weight: bold;
+
+}
 /* MAIN */
 .content{
     flex: 1;
