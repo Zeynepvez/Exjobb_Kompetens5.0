@@ -50,7 +50,7 @@ public class AuthController {
 
         User user = userService.findByEmail(cleanEmail);
 
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+        if (user != null && passwordEncoder.matches(cleanPassword, user.getPassword())) {
             session.setAttribute("user", user);
             return "redirect:/Home";
         } else {
@@ -86,6 +86,7 @@ public class AuthController {
         }
 
         User user = new User();
+
         user.setFirstName(firstName.trim());
         user.setLastName(lastName.trim());
         user.setEmail(cleanEmail);

@@ -43,7 +43,7 @@ public class AdminController {
         model.addAttribute("totalCourses", allCourses.size());
         model.addAttribute("totalRegistrations", allRegistrations.size());
         model.addAttribute("memberRegistrationCounts", memberRegistrationCounts);
-        return "admin";
+        return "admin/admin";
     }
 
     @PostMapping("/admin/delete-member")
@@ -61,7 +61,7 @@ public class AdminController {
         List<Registration> registrations = registrationService.getRegistrationsByUser(member);
         model.addAttribute("member", member);
         model.addAttribute("registrations", registrations);
-        return "admin-member";
+        return "admin/admin-member";
     }
 
     @GetMapping("/admin/export/members")

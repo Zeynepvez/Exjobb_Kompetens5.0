@@ -23,7 +23,7 @@ public class AdminCourseController {
     public String showCourses(HttpSession session, Model model) {
         if (session.getAttribute("admin") == null) return "redirect:/login";
         model.addAttribute("courses", courseService.findAllCourses());
-        return "admin-courses";
+        return "admin/admin-courses";
     }
 
     @PostMapping("/courses/add")
@@ -119,6 +119,6 @@ public class AdminCourseController {
         model.addAttribute("course", course);
         model.addAttribute("registrations", registrations);
         model.addAttribute("participantCount", registrations.size());
-        return "admin-course";
+        return "admin/admin-courses";
     }
 }

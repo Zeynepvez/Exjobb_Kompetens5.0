@@ -19,7 +19,7 @@ public class AdminNewsController {
     public String showAdminNews(HttpSession session, Model model) {
         if (session.getAttribute("admin") == null) return "redirect:/login";
         model.addAttribute("newsList", newsService.findAllNews());
-        return "admin-news";
+        return "admin/admin-news";
     }
 
     @GetMapping("/{id}")
@@ -30,7 +30,7 @@ public class AdminNewsController {
         if (news == null) return "redirect:/admin/news";
 
         model.addAttribute("news", news);
-        return "admin-news-details";
+        return "admin/admin-news";
     }
 
     @GetMapping("/edit/{id}")

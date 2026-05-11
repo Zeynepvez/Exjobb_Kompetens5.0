@@ -22,7 +22,7 @@ public class AdminMessageController {
         if (session.getAttribute("admin") == null) return "redirect:/login";
 
         model.addAttribute("messages", contactMessageService.findAllMessages());
-        return "admin-messages";
+        return "admin/admin-messages";
     }
 
     @GetMapping("/message/{id}")
@@ -35,7 +35,7 @@ public class AdminMessageController {
         if (message == null) return "redirect:/admin/messages";
 
         model.addAttribute("message", message);
-        return "admin-message";
+        return "admin/admin-messages";
     }
 
     @PostMapping("/message/reply")

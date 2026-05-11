@@ -15,24 +15,31 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
+                .csrf(csrf -> csrf.disable())
+
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().permitAll()
                 )
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**")
-                )
+
+
                 .headers(headers -> headers
                         .frameOptions(frame -> frame.sameOrigin())
-
                 )
-                .formLogin(form -> form.disable());
+
+
+                .formLogin(form -> form.disable())
+
+
+                .httpBasic(basic -> basic.disable());
 
         return http.build();
     }
-        @Bean
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
