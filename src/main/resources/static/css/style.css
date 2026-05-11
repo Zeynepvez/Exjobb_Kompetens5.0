@@ -634,3 +634,13 @@ nav a.active {
     background: #ddd;
     margin: 15px 0;
 }
+
+.newsletter-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+       
+
+

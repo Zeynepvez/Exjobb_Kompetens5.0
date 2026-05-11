@@ -5,10 +5,12 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminMessageController {
+
     private final ContactMessageService contactMessageService;
 
     public AdminMessageController(ContactMessageService contactMessageService) {
@@ -18,12 +20,15 @@ public class AdminMessageController {
     @GetMapping("/messages")
     public String showAdminMessages(HttpSession session, Model model) {
         if (session.getAttribute("admin") == null) return "redirect:/login";
+
         model.addAttribute("messages", contactMessageService.findAllMessages());
         return "admin-messages";
     }
 
     @GetMapping("/message/{id}")
-    public String showAdminMessageDetails(@PathVariable Long id, HttpSession session, Model model) {
+    public String showAdminMessageDetails(@PathVariable Long id,
+                                          HttpSession session,
+                                          Model model) {
         if (session.getAttribute("admin") == null) return "redirect:/login";
 
         ContactMessage message = contactMessageService.findById(id);
@@ -33,9 +38,22 @@ public class AdminMessageController {
         return "admin-message";
     }
 
-    @PostMapping("/message/delete")
-    public String deleteMessage(@RequestParam Long id, HttpSession session) {
+    @PostMapping("/message/reply")
+    public String replyToMessage(@RequestParam Long id,
+                                 @RequestParam String reply,
+                                 HttpSession session) {
         if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        contactMessageService.replyToMessage(id, reply);
+
+        return "redirect:/admin/message/" + id;
+    }
+
+    @PostMapping("/message/delete")
+    public String deleteMessage(@RequestParam Long id,
+                                HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
         contactMessageService.deleteMessageById(id);
         return "redirect:/admin/messages";
     }

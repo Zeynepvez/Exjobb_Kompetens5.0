@@ -33,8 +33,8 @@ public class ContactController {
         if (user == null) return "redirect:/login";
 
         ContactMessage contactMessage = new ContactMessage();
-        contactMessage.setSenderName(user.getFirstName() + " " + user.getLastName());
-        contactMessage.setSenderEmail(user.getEmail());
+        contactMessage.setName(user.getFirstName() + " " + user.getLastName());
+        contactMessage.setEmail(user.getEmail());
         contactMessage.setSubject(subject);
         contactMessage.setMessage(message);
 

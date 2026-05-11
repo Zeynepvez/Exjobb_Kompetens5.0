@@ -45,8 +45,8 @@
                 </thead>
                 <tbody>
                 <tr th:each="msg : ${messages}">
-                    <td th:text="${msg.senderName}">Name</td>
-                    <td th:text="${msg.senderEmail}">Email</td>
+                    <td th:text="${msg.name}">Name</td>
+                    <td th:text="${msg.email}">Email</td>
                     <td>
                         <a th:href="@{/admin/message/{id}(id=${msg.id})}"
                            th:text="${msg.subject}">Subject</a>

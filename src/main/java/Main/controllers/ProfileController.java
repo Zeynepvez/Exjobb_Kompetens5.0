@@ -33,6 +33,7 @@ public class ProfileController {
             @RequestParam(required = false) String municipality,
             @RequestParam(required = false) String organisation,
             @RequestParam(required = false) String role,
+            @RequestParam boolean newsletter,
             HttpSession session) {
 
         User user = (User) session.getAttribute("user");
@@ -45,6 +46,7 @@ public class ProfileController {
         user.setMunicipality(municipality);
         user.setOrganisation(organisation);
         user.setRole(role);
+        user.setNewsletter(newsletter);
 
         userService.saveUser(user);
         session.setAttribute("user", user);
@@ -104,4 +106,5 @@ public class ProfileController {
         model.addAttribute("passwordSuccess", "Password updated successfully");
         return "profile";
     }
+
 }

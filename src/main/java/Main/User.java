@@ -22,7 +22,14 @@ public class User {
     private String municipality;
     private String organisation;
     private String role;
+    private boolean newsletter;
 
+    public boolean isNewsletter() {
+        return newsletter;
+    }
+    public void setNewsletter(boolean newsletter) {
+        this.newsletter = newsletter;
+    }
     // Getters och Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -38,6 +45,7 @@ public class User {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
