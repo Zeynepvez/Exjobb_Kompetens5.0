@@ -20,6 +20,7 @@ public class ContactController {
         if (user == null) return "redirect:/login";
 
         model.addAttribute("user", user);
+        model.addAttribute("currentPage", "contact");
         return "contact";
     }
 

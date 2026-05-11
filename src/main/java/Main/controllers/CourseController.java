@@ -31,6 +31,7 @@ public class CourseController {
         model.addAttribute("user", user);
         model.addAttribute("courses", courseService.findAllCourses());
         model.addAttribute("newsList", newsService.findAllNews());
+        model.addAttribute("currentPage", "home");
         return "Home";
     }
 
@@ -41,6 +42,7 @@ public class CourseController {
 
         model.addAttribute("user", user);
         model.addAttribute("registrations", registrationService.getRegistrationsByUser(user));
+        model.addAttribute("currentPage", "mycourses");
         return "my-courses";
     }
 
@@ -51,6 +53,7 @@ public class CourseController {
 
         model.addAttribute("user", user);
         model.addAttribute("courses", courseService.findAllCourses());
+        model.addAttribute("currentPage", "browse");
 
         List<Long> registeredCourseIds = registrationService.getRegistrationsByUser(user)
                 .stream()

@@ -10,15 +10,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Controller
 public class AuthController {
     private final UserService userService;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService userService, EmailService emailService) {
+    public AuthController(UserService userService, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/")
@@ -32,7 +35,7 @@ public class AuthController {
             @RequestParam("email") String email,
             @RequestParam("password") String password,
             HttpSession session,
-            RedirectAttributes redirectAttributes) {
+            Model model) {
 
         String adminEmail = "admin@kompetens.com";
         String adminPassword = "admin123";
@@ -47,13 +50,13 @@ public class AuthController {
 
         User user = userService.findByEmail(cleanEmail);
 
-        if (user != null && user.getPassword().trim().equals(cleanPassword)) {
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             session.setAttribute("user", user);
             return "redirect:/Home";
+        } else {
+            model.addAttribute("loginError", "Invalid email or password");
+            return "login";
         }
-
-        redirectAttributes.addFlashAttribute("loginError", "Invalid email or password");
-        return "redirect:/login";
     }
 
     @PostMapping("/register")

@@ -21,6 +21,7 @@ public class NewsController {
 
         model.addAttribute("user", user);
         model.addAttribute("newsList", newsService.findAllNews());
+        model.addAttribute("currentPage", "news");
         return "news";
     }
 
@@ -34,6 +35,7 @@ public class NewsController {
 
         model.addAttribute("user", user);
         model.addAttribute("news", news);
+        model.addAttribute("currentPage", "news");
         return "news-details";
     }
 }
