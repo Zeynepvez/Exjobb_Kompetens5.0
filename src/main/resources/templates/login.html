@@ -19,6 +19,10 @@
 
         <button class="purple-btn" type="submit">Login</button>
     </form>
+
+    <div class="register-error" th:if="${registerError}" th:text="${registerError}"
+         style="color: red; margin-top: 10px;"></div>
+
     <p>Don't have an account?</p>
     <p><a href="#" onclick="showStep1(); return false;">Register</a></p>
 </div>

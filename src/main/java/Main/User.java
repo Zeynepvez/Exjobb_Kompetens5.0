@@ -22,12 +22,12 @@ public class User {
     private String municipality;
     private String organisation;
     private String role;
-    private boolean newsletter;
+    private Boolean newsletter;
 
-    public boolean isNewsletter() {
+    public Boolean isNewsletter() {
         return newsletter;
     }
-    public void setNewsletter(boolean newsletter) {
+    public void setNewsletter(Boolean newsletter) {
         this.newsletter = newsletter;
     }
     // Getters och Setters
