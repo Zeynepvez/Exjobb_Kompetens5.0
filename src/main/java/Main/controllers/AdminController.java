@@ -131,4 +131,23 @@ public class AdminController {
         if (value == null) return "";
         return "\"" + value.replace("\"", "\"\"") + "\"";
     }
+
+    @GetMapping("/admin/admin-members")
+    public String showMembers(HttpSession session, Model model) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        List<User> allUsers = userService.findAllUsers();
+        List<Registration> allRegistrations = registrationService.getAllRegistrations();
+
+        Map<Long, Long> memberRegistrationCounts = allRegistrations.stream()
+                .collect(Collectors.groupingBy(
+                        r -> r.getUser().getId(),
+                        Collectors.counting()
+                ));
+
+        model.addAttribute("members", allUsers);
+        model.addAttribute("memberRegistrationCounts", memberRegistrationCounts);
+
+        return "admin/admin-members";
+    }
 }

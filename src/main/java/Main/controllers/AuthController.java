@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Controller
@@ -96,6 +95,7 @@ public class AuthController {
         user.setMunicipality(municipality);
         user.setPassword(cleanPassword);
 
+        user.setNewsletter(false);
         userService.saveUser(user);
 
         emailService.sendEmail(

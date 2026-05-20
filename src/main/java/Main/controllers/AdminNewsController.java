@@ -30,7 +30,7 @@ public class AdminNewsController {
         if (news == null) return "redirect:/admin/news";
 
         model.addAttribute("news", news);
-        return "admin/admin-news";
+        return "admin/admin-news-details";
     }
 
     @GetMapping("/edit/{id}")
@@ -41,7 +41,7 @@ public class AdminNewsController {
         if (news == null) return "redirect:/admin/news";
 
         model.addAttribute("news", news);
-        return "admin-edit-news";
+        return "admin/admin-edit-news";
     }
 
     @PostMapping("/add")

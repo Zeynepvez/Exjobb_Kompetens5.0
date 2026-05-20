@@ -33,7 +33,7 @@ public class ProfileController {
             @RequestParam(required = false) String municipality,
             @RequestParam(required = false) String organisation,
             @RequestParam(required = false) String role,
-            @RequestParam boolean newsletter,
+            @RequestParam(value = "newsletter", required = false, defaultValue = "false") boolean newsletter,
             HttpSession session) {
 
         User user = (User) session.getAttribute("user");

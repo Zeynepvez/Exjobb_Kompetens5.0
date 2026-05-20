@@ -207,10 +207,6 @@ nav a.active {
     background: #f5f5f5;
 }
 
-/*.actions {
-    text-align: center;
-    width: 80px;
-} */
 
 .delete-btn {
     background: #e74c3c;
@@ -646,6 +642,9 @@ nav a.active {
     justify-content: flex-start;
     margin-top: 10px;
 }
-       
+
+.members-table tbody tr:hover {
+    background-color: #f3f7f8;
+}
 
 
